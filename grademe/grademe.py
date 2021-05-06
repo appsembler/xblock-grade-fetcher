@@ -82,7 +82,7 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
     )
     extra_params = String(
         display_name=_("Extra Parameters:"),
-        default="example_param_1=example_value_1&example_param_2=example_value_2",
+        default="",
         scope=Scope.settings,
         help=_(
             "Here you can add extra parameters to include in the request url. "
