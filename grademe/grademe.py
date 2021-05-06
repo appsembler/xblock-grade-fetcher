@@ -9,6 +9,7 @@ import pkg_resources
 import requests
 
 
+@XBlock.needs('i18n', 'user')
 class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
     """
     Get users grade from external systems
@@ -116,6 +117,18 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Make a call to an external grader and retreive user's grade
         """
+        self.response = requests.post(
+            "https://us-central1-appsembler-testing.cloudfunctions.net/external_grader_test_endpoint",
+            data={
+                "email": self.user_data().get("email", ""),
+                "username": self.user_data().get("username", ""),
+                "role": self.user_data().get("role", ""),
+                "anonymous_student_id": self.user_data().get(
+                    "anonymous_student_id", ""
+                ),
+                "user_id": self.user_data().get("user_id", "")
+            }
+        )
         self.grade = 1
         self.reason = "You completed this activity with high score."
         self.htmlFormat = '''
