@@ -19,6 +19,8 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         'display_name',
         'description',
         'button_text',
+        'user_identifier',
+        'user_identifier_parameter',
         'authentication_endpoint',
         'grader_endpoint',
         'activity_identifier',
@@ -41,6 +43,29 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         display_name=_("Button text"),
         help=_("Text to show for the button"),
         default="Grade Me",
+        scope=Scope.settings,
+    )
+    user_identifier = String(
+        display_name=_("User Identifier"),
+        help=_("This is the parameter we send to the grader to identify the user"),
+        values=(
+            {'display_name': _('email'), 'value': 'email'},
+            {'display_name': _('username'), 'value': 'username'},
+            {'display_name': _('user_id'), 'value': 'user_id'},
+            {'display_name': _('anonymous_student_id'), 'value': 'anonymous_student_id'}
+        ),
+        default="email",
+    )
+    user_identifier_parameter = String(
+        display_name=_("User identifier parameter name"),
+        help=_(
+            "this is a parameter we use in HTTP call to send user_identifier"
+            "to the grader system, for example email or username."
+            "If your system use custom parameter feel free to change it "
+            "accordingly for example if your system uses, user_id to identify" 
+            "the user you should set this to user_id"
+        ),
+        default="email",
         scope=Scope.settings,
     )
     grade = Integer(
