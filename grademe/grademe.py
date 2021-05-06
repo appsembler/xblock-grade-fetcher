@@ -18,9 +18,8 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
     editable_fields = [
         'authentication_endpoint',
         'grader_endpoint',
+        'activity_identifier',
         'extra_params'
-
-
     ]
     # Defining the mode
     grade = Integer(
@@ -52,6 +51,14 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         scope=Scope.settings,
         default=""
     )
+    activity_identifier = String(
+        display_name=_("Activity Identifier "),
+        help=_(
+            "An identifier to send to the grader to recognize the activity's unit"
+        ),
+        scope=Scope.settings,
+        default=""
+    )
     extra_params = String(
         display_name=_("Extra Parameters:"),
         default="example_param_1=example_value_1&example_param_2=example_value_2",
@@ -78,6 +85,7 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         user_data["username"] = user.opt_attrs['edx-platform.username']
         user_data["anonymous_student_id"] = runtime.anonymous_student_id
         return user_data
+
 
     def load_resource(self, resource_path):
         """
