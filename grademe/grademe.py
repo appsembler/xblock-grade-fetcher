@@ -13,6 +13,7 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
     """
     Get users grade from external systems
     """
+    has_score = True
     editable_fields = [
         'authentication_endpoint',
         'grader_endpoint',
@@ -124,6 +125,10 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         <span>
         '''.format(grade=self.grade, reason=self.reason)
         # grade the user
+        if self.grade:
+            grade_event = {'value': self.grade, 'max_value': 1}
+            self.runtime.publish(self, 'grade', grade_event)
+
         return {
             'grade': self.grade,
             'reason': self.reason,
