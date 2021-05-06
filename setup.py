@@ -1,4 +1,4 @@
-"""Setup for grademe XBlock."""
+"""Setup for gradefetcher XBlock."""
 
 
 import os
@@ -23,20 +23,20 @@ def package_data(pkg, roots):
 
 
 setup(
-    name='grademe-xblock',
+    name='gradefetcher-xblock',
     version='0.1',
-    description='grademe XBlock',   # TODO: write a better description.
-    license='UNKNOWN',          # TODO: choose a license: 'AGPL v3' and 'Apache 2.0' are popular.
+    description='Grade Fetcher',
+    license='AGPL v3',
     packages=[
-        'grademe',
+        'gradefetcher',
     ],
     install_requires=[
         'XBlock',
     ],
     entry_points={
         'xblock.v1': [
-            'grademe = grademe:GradeMeXBlock',
+            'gradefetcher = gradefetcher:GradeFetcherXBlock',
         ]
     },
-    package_data=package_data("grademe", ["static", "public"]),
+    package_data=package_data("gradefetcher", ["static", "public"]),
 )

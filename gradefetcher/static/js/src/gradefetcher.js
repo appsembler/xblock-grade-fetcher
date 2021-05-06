@@ -1,5 +1,5 @@
-/* Javascript for GradeMeXBlock. */
-function GradeMeXBlock(runtime, element) {
+/* Javascript for GradeFetcherXBlock. */
+function GradeFetcherXBlock(runtime, element) {
 
     function updateGrade(result) {
         $('.block-description', element).html(result.htmlFormat);

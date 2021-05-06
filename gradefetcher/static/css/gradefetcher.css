@@ -1,4 +1,4 @@
-/* CSS for GradeMeXBlock */
+/* CSS for GradeFetcherXBlock */
 
 .grademe_block .block-title {
     font-weight: bold;
@@ -23,9 +23,9 @@
     border-color: #fff;
 }
 .grademe_block .grade,
-.grademe_block .reason {
+.grademe_block .reasons {
     font-weight: bold;
 }
-.grademe_block .reason {
+.grademe_block .reasons {
     font-style: italic;
 }
