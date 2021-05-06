@@ -16,12 +16,33 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
     """
     has_score = True
     editable_fields = [
+        'display_name',
+        'description',
+        'button_text',
         'authentication_endpoint',
         'grader_endpoint',
         'activity_identifier',
         'extra_params'
     ]
-    # Defining the mode
+    # Defining the models
+    display_name = String(
+        display_name=_("Display Name"),
+        help=_("Display name for this module"),
+        default="External Grader",
+        scope=Scope.settings,
+    )
+    description = String(
+        display_name=_("Description"),
+        help=_("Description to show to the users"),
+        default="Description",
+        scope=Scope.settings,
+    )
+    button_text = String(
+        display_name=_("Button text"),
+        help=_("Text to show for the button"),
+        default="Grade Me",
+        scope=Scope.settings,
+    )
     grade = Integer(
         display_name=_("User's Grade"),
         help=_("User's score in the activity"),
@@ -86,7 +107,6 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         user_data["anonymous_student_id"] = runtime.anonymous_student_id
         return user_data
 
-
     def load_resource(self, resource_path):
         """
         Gets the content of a resource
@@ -107,6 +127,9 @@ class GradeMeXBlock(XBlock, StudioEditableXBlockMixin):
         when viewing courses.
         """
         context = {
+            'display_name': self.display_name,
+            'description': self.description,
+            'button_text': self.button_text,
             'grade': self.grade,
             'reason': self.reason,
             'authentication_endpoint': self.authentication_endpoint,
