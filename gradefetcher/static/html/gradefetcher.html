@@ -1,14 +1,21 @@
 <div class="grademe_block">
-    <h1 class="block-title">{{description}}</h1>
-    <p class='block-description'>
-        {% if grade and reasons %}
-            You got <span class="grade">{{grade}}</span> score for this activity.<br />
-            Explanation: <span class="reasons">{{reasons}}</span>
-        {% elif grade == 0 and not reasons %}
-            Click on the <span class="">{{button_text}}</span> button to see your score.
-        {% else %}
-            Something went wrong please try again.
-        {% endif %}
-    </p>
-    <button class="block-button" id="grade-me">{{button_text}}</button>
+  <h1 class="block-title">{{description}}</h1>
+  <p class="block-description">
+    {% if grade and reasons %} 
+        You got <span class="grade">{{grade}} %</span> score for this activity.<br />
+        Explanation: 
+        {% for reason in reasons %}
+            <div class="reasons">
+                <ul>
+                    <li>{{reason}}</li>
+                </ul>
+            </div> 
+        {% endfor %}
+    {% elif grade == 0 and not reasons %} 
+        Click on the <span class="">{{button_text}}</span> button to see your score. 
+    {% else %} 
+        Something went wrong please try again. 
+    {% endif%}
+  </p>
+  <button class="block-button" id="grade-me">{{button_text}}</button>
 </div>
