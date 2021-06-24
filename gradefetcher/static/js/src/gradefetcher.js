@@ -7,14 +7,15 @@ function GradeFetcherXBlock(runtime, element) {
 
     var handlerUrl = runtime.handlerUrl(element, 'grade_user');
 
-    $('#grade-me', element).click(function(eventObject) {
-        $.ajax({
-            type: "POST",
-            url: handlerUrl,
-            data: JSON.stringify({}),
-            success: updateGrade
+    $('#grade-me', element).click(
+        function(eventObject) {
+            $.ajax({
+                type: "POST",
+                url: handlerUrl,
+                data: JSON.stringify({}),
+                success: updateGrade
+            });
         });
-    });
 
     $(function ($) {
     });
