@@ -258,18 +258,19 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         grade = grades[0] * 100
                     reasons = []
                     for result in grader_response.json()["results"]:
-                        if result["grade"] > 0:
-                            reason = "Assignment {assignment_id}: <b>Passed</b>.".format(
-                                assignment_id=result["assignment_id"],
-                            )
-                            reasons.append(reason)
-                        elif result["grade"] == 0:
-                            reason = "Assignment {assignment_id}: <b>Failed</b> - {reason} ".format(
-                                assignment_id=result["assignment_id"],
-                                reason=result["reason"],
-                            )
-                            reasons.append(reason)
-                        elif "reason" in result and "grade" not in result:
+                        if "grade" in result:
+                            if result["grade"] > 0:
+                                reason = "Assignment {assignment_id}: <b>Passed</b>.".format(
+                                    assignment_id=result["assignment_id"],
+                                )
+                                reasons.append(reason)
+                            elif result["grade"] == 0:
+                                reason = "Assignment {assignment_id}: <b>Failed</b> - {reason} ".format(
+                                    assignment_id=result["assignment_id"],
+                                    reason=result["reason"],
+                                )
+                                reasons.append(reason)
+                        elif "grade" not in result:
                             reason = "Assignment {assignment_id}: - {reason} ".format(
                                 assignment_id=result["assignment_id"],
                                 reason=result["reason"],
