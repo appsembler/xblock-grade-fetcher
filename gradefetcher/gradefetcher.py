@@ -236,12 +236,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         get_query_string += "=" + self.activity_identifier
                     if self.extra_params:
                         get_query_string += "&" + self.extra_params
-                    LOGGER.info(self.grader_endpoint + get_query_string)
-                    LOGGER.info(grader_headers)
                     grader_response = requests.get(
                         self.grader_endpoint + get_query_string, headers=grader_headers
                     )
-                    LOGGER.info(grader_response.json())
                     calculate_grade = False
                     grades = []
                     for result in grader_response.json()["results"]:

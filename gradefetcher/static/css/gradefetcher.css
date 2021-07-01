@@ -29,3 +29,12 @@
 .grademe_block .reasons {
     font-style: italic;
 }
+.grademe_block .block-button-loading {
+    display: block;
+    cursor: not-allowed;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: transparent;
+    border-color: #bdbdbd;
+    margin-top: 20px;
+}
