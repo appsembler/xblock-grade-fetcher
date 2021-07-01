@@ -264,13 +264,13 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                             )
                             reasons.append(reason)
                         elif result["grade"] == 0:
-                            reason = "Assignment {assignment_id}: <b>Failed</b> - {reasons} ".format(
+                            reason = "Assignment {assignment_id}: <b>Failed</b> - {reason} ".format(
                                 assignment_id=result["assignment_id"],
                                 reason=result["reason"],
                             )
                             reasons.append(reason)
-                        elif "reason" in result and "grade" not in "result":
-                            reason = "Assignment {assignment_id}: - {reasons} ".format(
+                        elif "reason" in result and "grade" not in result:
+                            reason = "Assignment {assignment_id}: - {reason} ".format(
                                 assignment_id=result["assignment_id"],
                                 reason=result["reason"],
                             )
