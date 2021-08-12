@@ -250,7 +250,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         total_grade = 0
                         for g in grades:
                             total_grade += g
-                        grade = int(truediv(total_grade, len(grades))) * 100
+                        grade = int(truediv(total_grade * 100, len(grades)))
                     else:
                         grade = grades[0] * 100
                     reasons = []
