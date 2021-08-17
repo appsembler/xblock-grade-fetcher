@@ -13,6 +13,8 @@
         {% endfor %}
     {% elif grade == 0 and not reasons %} 
         Click on the <span class="">{{button_text}}</span> button to see your score.
+    {% elif not grade and not reasons and not results %}
+        You have not yet submitted your answers.
     {% else %} 
         Something went wrong please try again. 
     {% endif%}
