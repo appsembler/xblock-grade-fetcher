@@ -22,7 +22,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     has_score = True
     editable_fields = [
         "display_name",
-        "description",
+        "title",
         "button_text",
         "user_identifier",
         "user_identifier_parameter",
@@ -40,10 +40,10 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         default="Grade Fetcher",
         scope=Scope.settings,
     )
-    description = String(
-        display_name=_("Description"),
-        help=_("Description to show to the users"),
-        default="Description",
+    title = String(
+        display_name=_("Title"),
+        help=_("Title to show to the users"),
+        default="Grade Fetcher",
         scope=Scope.settings,
     )
     button_text = String(
@@ -176,7 +176,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         context = {
             "display_name": self.display_name,
-            "description": self.description,
+            "title": self.title,
             "button_text": self.button_text,
             "grade": self.grade,
             "reason": self.reason,
