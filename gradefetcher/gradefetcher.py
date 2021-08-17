@@ -242,7 +242,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     calculate_grade = False
                     grades = []
                     if "results" not in grader_response:
-                        return {"grade": "", "reason": "", "results": ""}
+                        return {
+                            "grade": "",
+                            "reason": "",
+                            "results": "",
+                            "htmlFormat": "<span>You have not yet submitted your answers.</span>",
+                        }
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
                             grades.append(result["grade"])
