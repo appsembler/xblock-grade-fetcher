@@ -315,7 +315,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         )
         # grade the user
         if grade:
-            grade_event = {"value": grade, "max_value": 1}
+            grade_event = {"value": grade * 1.00 / 100, "max_value": 1}
             self.runtime.publish(self, "grade", grade_event)
 
         return {"grade": grade, "reason": reasons, "htmlFormat": self.htmlFormat}
