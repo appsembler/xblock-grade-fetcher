@@ -241,7 +241,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     )
                     calculate_grade = False
                     grades = []
-                    if "results" not in grader_response:
+                    if "results" not in grader_response.json():
                         return {
                             "grade": "",
                             "reason": "",
