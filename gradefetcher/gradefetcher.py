@@ -9,6 +9,10 @@ from django.utils.safestring import mark_safe
 import pkg_resources
 import requests
 import logging
+import os
+from django.template import Context
+from xblockutils.resources import ResourceLoader
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +22,8 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     """
     Get users grade from external systems
     """
-
+    loader = ResourceLoader(__name__)
+    
     has_score = True
     editable_fields = [
         "display_name",
@@ -162,12 +167,14 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         resource_content = pkg_resources.resource_string(__name__, resource_path)
         return resource_content.decode("utf8")
 
-    def render_template(self, template_path, context={}):
+    def render_template(self, path, context=None):
         """
         Evaluate a template by resource path, applying the provided context
         """
-        template_str = self.load_resource(template_path)
-        return Template(template_str).render(Context(context))
+
+        return self.loader.render_django_template(os.path.join('static/html', path),
+                                                  context=Context(context or {}),
+                                                  i18n_service=self.runtime.service(self, 'i18n'))
 
     def student_view(self, context=None):
         """
@@ -184,13 +191,20 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             "grader_endpoint": self.grader_endpoint,
             "extra_params": mark_safe("&{}".format(self.extra_params)),
         }
-        html = self.render_template("static/html/gradefetcher.html", context)
+        html = self.render_template("gradefetcher.html", context)
         frag = Fragment(html)
         frag.add_css(self.load_resource("static/css/gradefetcher.css"))
         frag.add_javascript(self.load_resource("static/js/src/gradefetcher.js"))
         frag.initialize_js("GradeFetcherXBlock")
         return frag
-
+    @property
+    def i18n_service(self):
+        """ Obtains translation service """
+        i18n_service = self.runtime.service(self, "i18n")
+        if i18n_service:
+            return i18n_service
+        else:
+            return DummyTranslationService()
     @XBlock.json_handler
     def grade_user(self, data, suffix=""):
         """
@@ -242,11 +256,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     calculate_grade = False
                     grades = []
                     if "results" not in grader_response.json():
+                        msg = self.i18n_service.gettext("You have not yet submitted your answers.")
                         return {
                             "grade": "",
                             "reason": "",
                             "results": "",
-                            "htmlFormat": "<span>You have not yet submitted your answers.</span>",
+                            "htmlFormat": "<span>{message}</span>".format(message=msg),
                         }
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
@@ -264,20 +279,22 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
                             if result["grade"] > 0:
-                                reason = "Assignment {assignment_id}: <b>Passed</b>.".format(
-                                    assignment_id=result["assignment_id"],
-                                )
+                                reason = self.i18n_service.gettext(
+                                    "Assignment {assignment_id}: <b>Passed</b>").format(
+                                        assignment_id=result["assignment_id"],
+                                    )
                                 reasons.append(reason)
-                            elif result["grade"] == 0:
-                                reason = "Assignment {assignment_id}: <b>Failed</b> - {reason} ".format(
+                            elif result["grade"] == 0: 
+                                reason = self.i18n_service.gettext("Assignment {assignment_id}: <b>Failed</b> - {reason} ").format(
                                     assignment_id=result["assignment_id"],
                                     reason=result["reason"],
                                 )
                                 reasons.append(reason)
                         elif "grade" not in result:
-                            reason = "Assignment {assignment_id}: - {reason} ".format(
+                            reason_api_text = self.i18n_service.gettext(result["reason"])
+                            reason = self.i18n_service.gettext("Assignment {assignment_id}: - {reason_api_text} ").format(
                                 assignment_id=result["assignment_id"],
-                                reason=result["reason"],
+                                reason_api_text=reason_api_text,
                             )
                             reasons.append(reason)
                 elif self.http_method == "post":
@@ -304,15 +321,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
 
         reasons_msg = ""
         for reason in reasons:
-            reasons_msg += "<li>{reason}</li>".format(reason=reason)
-        self.htmlFormat = """
-        <span>
-        You got <span class="grade">{grade}% </span> score for this activity.<br />
-        Explanation: <span class="reason"><ul>{reasons_msg}</ul></span>
-        <span>
-        """.format(
-            grade=grade, reasons_msg=reasons_msg
-        )
+            reasons_msg += "<li>{reason}</li>".format(reason=reason)                
+        self.htmlFormat = self.i18n_service.gettext("You got <span class='grade'>{grade}% </span> score for this activity.<br />Explanation: <span class='reason'><ul>{reasons_msg}</ul></span>").format(
+            grade=grade, reasons_msg=reasons_msg)
         # grade the user
         if grade >= 0:
             grade_event = {"value": grade * 1.00 / 100, "max_value": 1}

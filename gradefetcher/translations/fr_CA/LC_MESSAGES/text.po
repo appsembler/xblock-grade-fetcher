@@ -1,0 +1,140 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# DHIS2 <EMAIL@ADDRESS>, 2021
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-06 15:43+0300\n"
+"PO-Revision-Date: 2021-09-06 12:43+0000\n"
+"Last-Translator: DHIS2 <EMAIL@ADDRESS>, 2021\n"
+"Language-Team: French (Canada) (https://www.transifex.com/open-edx/teams/6205/fr_CA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Passed"
+msgstr "Réussi"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Failed"
+msgstr "Échoué"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment"
+msgstr "Activité"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: <b>Passed</b>"
+msgstr "Activité {assignment_id}: <b>Réussi</b>"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: <b>Failed</b> - {reason}"
+msgstr "Activité {assignment_id}: <b>Échoué</b> - {reason}"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: - {reason} "
+msgstr "Activité {assignment_id}: - {reason}"
+
+
+#: gradefetcher/gradefetcher.py gradefetcher/static/html/gradefetcher.html
+msgid "You got {grade} score for this activity. Explanation: {reasons_msg}"
+msgstr "Vous avez obtenu {grade} pour cette activité. Explication: {reasons_msg}"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: Failed "
+msgstr "Activité {assignment_id}: Échoué"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "You have not yet submitted your answers."
+msgstr "Vous n'avez pas encore soumis vos réponses."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Something went wrong please try again."
+msgstr "Une erreur s'est produite. Veuillez réessayer."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Loading"
+msgstr "Chargement"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "You got "
+msgstr "Vous avez obtenu"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid " score for this activity."
+msgstr "pour cette activité."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Explanation: "
+msgstr "Explication: "
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Click on the %(button_text)s button to see your score."
+msgstr "Cliquez sur le bouton %(button_text)s pour voir votre note."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "You got <span class='grade'>{grade}% </span> score for this activity.<br />Explanation: <span class='reason'><ul>{reasons_msg}</ul></span>"
+msgstr "Vous avez obtenu <span class='grade'>{grade}% </span> pour cette activité.<br />Explication:<span class='reason'><ul>{reasons_msg}</ul></span>"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid " button to see your score."
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that one of your data element groups is not assigned to a data element group set. Note: This does not affect your grade."
+msgstr "Il semble que l'un de vos groupes d'éléments de données ne soit rattaché à aucun ensemble de groupes d'éléments de données. Note : cela n'a pas d'incidence sur votre note."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created data elements yet. Note: This does not affect your grade, but it is preventing you from completing this set of assignments."
+msgstr "Il semble que vous n'ayez pas encore créé d'éléments de données. Note : cela n'a pas d'incidence sur votre note, mais vous empêche de terminer cette série d'exercices."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created all of the three requested data element groups. Note: This does not affect your grade."
+msgstr "Il semble que vous ayez omis de créer un ou plusieurs des trois groupes d'éléments de données demandés. Note : cela n'a pas d'incidence sur votre note."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not assigned one or more of your data elements to your data element groups. Note: This does not affect your grade."
+msgstr "Il semble que tous vos éléments de données ne soient pas rattachés à vos groupes d'éléments de données. Note : cela n'a pas d'incidence sur votre note."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created the six data elements as requested. Note: This does not affect your grade"
+msgstr "Il semble que vous ayez omis de créer un ou plusieurs des six éléments de données demandés. Note : cela n'a pas d'incidence sur votre note."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that no data set is currently assigned to your account. Please contact the course team."
+msgstr "Il semble qu'aucun ensemble de données ne soit actuellement rattaché à votre compte. Veuillez contacter l'équipe pédagogique."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that no data has been entered in your data set."
+msgstr "Il semble qu'aucune donnée n'ait été saisie dans votre ensemble de données."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created all of the four requested organisation unit groups. Note: This does not affect your grade."
+msgstr "Il semble que vous ayez omis de créerl es quatre groupes d'unités d'organisation demandés. Note : cela n'a pas d'incidence sur votre note."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created the requested two organisation unit group sets. Note: This does not affect your grade."
+msgstr "Il semble que vous ayez omis de créer un ou les deux ensembles de groupes d'unités d'organisation demandés. Note : cela n'a pas d'incidence sur votre note."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "ERROR: We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team."
+msgstr "ERREUR : Nous ne trouvons pas votre compte dans Customization. Veuillez vous vérifier que vous avez bien créé votre compte. Si vous avez besoin d'aide, veuillez contacter l'équipe pédagogique."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "ERROR: Two or more Root Organisation Units have been assigned to your account. This is preventing us from assessing your assignments. Please contact the course team."
+msgstr "ERREUR : Deux unités d'organisation principales ou plus ont été rattachées à votre compte. Cela nous empêche d'évaluer vos exercices. Veuillez contacter l'équipe pédagogique."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not yet assigned your data elements to your data set, therefore you can't enter data. Check that data elements are assigned to the data set that was created for you. "
+msgstr "Il semble que vous ayez omis de rattacher vos éléments de données à votre ensemble de données. Cela vous empêche de saisir des données. Assurez-vous que les éléments de données soient affectés à l'ensemble de données qui a été créé pour vous. "

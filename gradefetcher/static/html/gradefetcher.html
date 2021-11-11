@@ -1,9 +1,11 @@
+{% load i18n %}
+
 <div class="grademe_block">
   <h1 class="block-title">{{title}}</h1>
   <p class="block-description">
     {% if grade and reasons %} 
-        You got <span class="grade">{{grade}} %</span> score for this activity.<br />
-        Explanation: 
+        {% trans "You got " %}<span class="grade">{{grade}} %</span>{% trans " score for this activity." %}<br />
+        {% trans "Explanation: " %}
         {% for reason in reasons %}
             <div class="reasons">
                 <ul>
@@ -12,16 +14,16 @@
             </div> 
         {% endfor %}
     {% elif grade == 0 and not reasons %} 
-        Click on the <span class="">{{button_text}}</span> button to see your score.
+        {% blocktrans %}Click on the {{button_text}} button to see your score.{% endblocktrans %}
     {% elif not grade and not reasons and not results %}
-        You have not yet submitted your answers.
+        {% trans "You have not yet submitted your answers." %}
     {% else %} 
-        Something went wrong please try again. 
+        {% trans "Something went wrong please try again." %}
     {% endif%}
   </p>
   <button class="block-button-loading" style="display: none;">
         <i class="fa fa-spinner fa-spin" style="margin-right: 8px;"></i>
-        Loading
+        {% trans "Loading" %}
   </button>
   <button class="block-button" id="grade-me">{{button_text}}</button>
 </div>
