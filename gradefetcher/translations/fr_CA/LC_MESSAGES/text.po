@@ -43,8 +43,8 @@ msgid "Assignment {assignment_id}: <b>Failed</b> - {reason}"
 msgstr "Activité {assignment_id}: <b>Échoué</b> - {reason}"
 
 #: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
-msgid "Assignment {assignment_id}: - {reason} "
-msgstr "Activité {assignment_id}: - {reason}"
+msgid "Assignment {assignment_id}: - {reason_api_text} "
+msgstr "Activité {assignment_id}: - {reason_api_text} "
 
 
 #: gradefetcher/gradefetcher.py gradefetcher/static/html/gradefetcher.html
