@@ -258,6 +258,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     if "results" not in grader_response.json():
                         if grader_response.status_code == 500:
                             msg = grader_response.json()["errorMessage"]
+                            msg = self.i18n_service.gettext(msg)
                         else:
                             msg = self.i18n_service.gettext("You have not yet submitted your answers.")
                         return {
