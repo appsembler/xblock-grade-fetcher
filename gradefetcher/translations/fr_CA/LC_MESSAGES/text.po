@@ -121,7 +121,7 @@ msgstr "Il semble qu'aucune donnée n'ait été saisie dans votre ensemble de do
 
 #: gradefetcher/static/html/gradefetcher.html
 msgid "It seems that you have not created all of the four requested organisation unit groups. Note: This does not affect your grade."
-msgstr "Il semble que vous ayez omis de créerl es quatre groupes d'unités d'organisation demandés. Note : cela n'a pas d'incidence sur votre note."
+msgstr "Il semble que vous ayez omis de créer les quatre groupes d'unités d'organisation demandés. Note : cela n'a pas d'incidence sur votre note."
 
 #: gradefetcher/static/html/gradefetcher.html
 msgid "It seems that you have not created the requested two organisation unit group sets. Note: This does not affect your grade."
