@@ -144,10 +144,6 @@ msgid "It seems that you have created none of the requested organisation units."
 msgstr "Il semble que vous ayez omis de créer les unités d'organisation demandés."
 
 #: gradefetcher/static/html/gradefetcher.html
-msgid "It seems that you have not yet assigned your data elements to your data set, therefore you can't enter data. Check that data elements are assigned to the data set that was created for you."
-msgstr "Il semble que vous ayez omis de rattacher vos éléments de données à votre ensemble de données. Cela vous empêche de saisir des données. Assurez-vous que les éléments de données soient affectés à l'ensemble de données qui a été créé pour vous."
-
-#: gradefetcher/static/html/gradefetcher.html
 msgid "It seems that your data set is not yet assigned to any organisation units."
 msgstr "Il semble que votre ensemble de données ne soit rattaché à aucune de vous unités d'organisation."
 
