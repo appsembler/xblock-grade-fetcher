@@ -289,9 +289,10 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                                     )
                                 reasons.append(reason)
                             elif result["grade"] == 0: 
-                                reason = self.i18n_service.gettext("Assignment {assignment_id}: <b>Failed</b> - {reason}").format(
+                                reason_api_text = self.i18n_service.gettext(result["reason"])
+                                reason = self.i18n_service.gettext("Assignment {assignment_id}: <b>Failed</b> - {reason_api_text}").format(
                                     assignment_id=result["assignment_id"],
-                                    reason=result["reason"],
+                                    reason_api_text=reason_api_text,
                                 )
                                 reasons.append(reason)
                         elif "grade" not in result:
