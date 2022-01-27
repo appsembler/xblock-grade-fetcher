@@ -35,8 +35,8 @@ msgid "Assignment "
 msgstr "Activité"
 
 #: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
-msgid "You have not yet submitted your answers."
-msgstr "Vous n'avez pas encore soumis vos réponses."
+msgid "We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team."
+msgstr "Nous ne trouvons pas votre compte sur la personnalisation. Veuillez vous assurer que vous avez créé votre compte. Si vous avez besoin d'aide, veuillez contacter l'équipe du cours."
 
 #: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
 msgid "Something went wrong please try again."

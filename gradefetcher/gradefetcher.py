@@ -260,7 +260,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                             msg = grader_response.json()["errorMessage"]
                             msg = self.i18n_service.gettext(msg)
                         else:
-                            msg = self.i18n_service.gettext("You have not yet submitted your answers.")
+                            msg = self.i18n_service.gettext("We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team.")
                         return {
                             "grade": "",
                             "reason": "",
