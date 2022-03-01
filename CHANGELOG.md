@@ -11,5 +11,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - First release to be published to GitHub releases (no pypi yet)
  - Starting changelog
 
-[unreleased]: https://github.com/appsembler/tahoe-sites/compare/v0.1...HEAD
+[unreleased]: https://github.com/appsembler/xblock-grade-fetcher/compare/v0.1...HEAD
 [0.1]: https://github.com/appsembler/xblock-grade-fetcher/commits/v0.1
