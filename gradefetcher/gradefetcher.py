@@ -23,7 +23,6 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     Get users grade from external systems
     """
     loader = ResourceLoader(__name__)
-    
     has_score = True
     editable_fields = [
         "display_name",
@@ -32,6 +31,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         "user_identifier",
         "user_identifier_parameter",
         "authentication_endpoint",
+        "authentication_endpoint_username",
+        "authentication_endpoint_password",
+        "api_key",
         "grader_endpoint",
         "http_method",
         "activity_identifier",
@@ -100,6 +102,24 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     authentication_endpoint = String(
         display_name=_("Authentication Endpoint"),
         help=_("The endpoint that gives us authorized token"),
+        scope=Scope.settings,
+        default="",
+    )
+    authentication_endpoint_username = String(
+        display_name=_("Authentication Endpoint Username"),
+        help=_("The username to use for the authentication endpoint"),
+        scope=Scope.settings,
+        default="",
+    )
+    authentication_endpoint_password = String(
+        display_name=_("Authentication Endpoint Password"),
+        help=_("The password to use for the authentication endpoint"),
+        scope=Scope.settings,
+        default="",
+    )
+    api_key = String(
+        display_name=_("API Key"),
+        help=_("API Key for the grader system"),
         scope=Scope.settings,
         default="",
     )
@@ -197,6 +217,26 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         frag.add_javascript(self.load_resource("static/js/src/gradefetcher.js"))
         frag.initialize_js("GradeFetcherXBlock")
         return frag
+
+    def studio_view(self, context=None):
+        fragment = Fragment()
+        context = {'fields': []}
+        # Build a list of all the fields that can be edited:
+        for field_name in self.editable_fields:
+            field = self.fields[field_name]
+            assert field.scope in (Scope.content, Scope.settings), (
+                "Only Scope.content or Scope.settings fields can be used with "
+                "StudioEditableXBlockMixin. Other scopes are for user-specific data and are "
+                "not generally created/configured by content authors in Studio."
+            )
+            field_info = self._make_field_info(field_name, field)
+            if field_info is not None:
+                context["fields"].append(field_info)
+        fragment.content = self.render_template('studio_edit.html', context)
+        fragment.add_javascript(self.load_resource("static/js/src/studio_edit.js"))
+        fragment.initialize_js('StudioEditableXBlockMixin')
+        return fragment
+
     @property
     def i18n_service(self):
         """ Obtains translation service """
@@ -219,8 +259,8 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                 auth_response = requests.post(
                     self.authentication_endpoint,
                     auth=(
-                        grade_fetcher_settings["AUTH_ENDPOINT_USERNAME"],
-                        grade_fetcher_settings["AUTH_ENDPOINT_PASSWORD"],
+                        self.authentication_endpoint_username,
+                        self.authentication_endpoint_password,
                     ),
                     headers={"Accept": "application/json"},
                     data={
@@ -235,8 +275,8 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                 grader_headers = {"Content-Type": "application/json"}
                 grader_headers["Authorization"] = "Bearer {token}".format(token=token)
                 # add api key in the headers if it's set in site configurations
-                if grade_fetcher_settings["API-KEY"]:
-                    grader_headers["x-api-key"] = grade_fetcher_settings["API-KEY"]
+                if self.api_key:
+                    grader_headers["x-api-key"] = self.api_key
                 # Make call based on the method in the studio xblock
                 if self.http_method == "get":
                     get_query_string = "?"
