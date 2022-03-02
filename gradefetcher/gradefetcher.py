@@ -35,7 +35,6 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         "authentication_endpoint_password",
         "api_key",
         "grader_endpoint",
-        "http_method",
         "activity_identifier",
         "activity_identifier_parameter",
         "extra_params",
