@@ -1,5 +1,7 @@
 {% load i18n %}
 <div class="editor-with-buttons">
+  <p style="font-weight: 600;color: red;margin: 15px 30px;">When you export this course, the Grade Fetcher Auth endpoint credentials and API Key will be exported as plaintext. Make
+  sure to keep the exported file safe!</p>
   <div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
     <ul class="list-input settings-list">
       {% for field in fields %}
