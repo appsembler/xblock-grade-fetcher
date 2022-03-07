@@ -23,7 +23,7 @@ def package_data(pkg, roots):
 
 
 setup(
-    name='gradefetcher-xblock',
+    name='xblock-grade-fetcher',
     version='0.1',
     description='Grade Fetcher',
     license='AGPL v3',
