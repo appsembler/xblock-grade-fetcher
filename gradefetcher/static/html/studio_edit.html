@@ -37,7 +37,7 @@
                   </option>
                 {% endfor %}
               </select>
-              {% elif field.type == "string" and field.name == "authentication_endpoint_password" %}
+              {% elif field.type == "string" and field.name == "authentication_password" or field.name == "client_secret"  %}
                 <input 
                   type="password" 
                   class="field-data-control" 

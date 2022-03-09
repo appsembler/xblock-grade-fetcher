@@ -31,8 +31,10 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         "user_identifier",
         "user_identifier_parameter",
         "authentication_endpoint",
-        "authentication_endpoint_username",
-        "authentication_endpoint_password",
+        "client_id",
+        "client_secret",
+        "authentication_username",
+        "authentication_password",
         "api_key",
         "grader_endpoint",
         "activity_identifier",
@@ -104,21 +106,33 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         scope=Scope.settings,
         default="",
     )
-    authentication_endpoint_username = String(
-        display_name=_("Authentication Endpoint Username"),
-        help=_("The username to use for the authentication endpoint"),
+    client_id = String(
+        display_name=_("Client ID"),
+        help=_("OAuth2 client id to use for the authentication endpoint"),
         scope=Scope.settings,
         default="",
     )
-    authentication_endpoint_password = String(
-        display_name=_("Authentication Endpoint Password"),
-        help=_("The password to use for the authentication endpoint"),
+    client_secret = String(
+        display_name=_("Client Secret"),
+        help=_("OAuth2 client password to use for the authentication endpoint"),
         scope=Scope.settings,
         default="",
     )
     api_key = String(
         display_name=_("API Key"),
-        help=_("API Key for the grader system"),
+        help=_("API Key to include in the header of the request as X-API-Key in the grader api"),
+        scope=Scope.settings,
+        default="",
+    )
+    authentication_username = String(
+        display_name=_("Authentication Username"),
+        help=_("Authentication endpoint Username"),
+        scope=Scope.settings,
+        default="",
+    )
+    authentication_password = String(
+        display_name=_("Authentication Password"),
+        help=_("Authentication endpoint Password"),
         scope=Scope.settings,
         default="",
     )
@@ -250,119 +264,102 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Make a call to an external grader and retreive user's grade
         """
-        # Get EXTERNAL_GRADER from site configuration
-        grade_fetcher_settings = configuration_helpers.get_value("GRADE_FETCHER", "")
         # 1. If user in studio set authentication endpoint we call it
-        if self.authentication_endpoint:
-            try:
+        try:
+            grader_headers = {"Content-Type": "application/json"}
+            if self.authentication_endpoint:
                 # 2. Make call to auth endpoint and get the token
                 auth_response = requests.post(
                     self.authentication_endpoint,
                     auth=(
-                        self.authentication_endpoint_username,
-                        self.authentication_endpoint_password,
+                        self.client_id,
+                        self.client_secret,
                     ),
                     headers={"Accept": "application/json"},
                     data={
                         "grant_type": "password",
-                        "username": grade_fetcher_settings["USERNAME"],
-                        "password": grade_fetcher_settings["PASSWORD"],
+                        "username": self.authentication_username,
+                        "password": self.authentication_password,
                     },
                 )
                 # get the token from the call
                 token = auth_response.json()["access_token"]
-                # 3. Call graded endpoint
-                grader_headers = {"Content-Type": "application/json"}
+                # add the token to the headers
                 grader_headers["Authorization"] = "Bearer {token}".format(token=token)
-                # add api key in the headers if it's set in site configurations
+                # add api key in the headers if it's set in studio
                 if self.api_key:
                     grader_headers["x-api-key"] = self.api_key
-                # Make call based on the method in the studio xblock
-                if self.http_method == "get":
-                    get_query_string = "?"
-                    get_query_string += self.user_identifier_parameter
-                    get_query_string += "=" + self.user_data().get(
-                        self.user_identifier, ""
-                    )
-                    if self.activity_identifier_parameter:
-                        get_query_string += "&" + self.activity_identifier_parameter
-                    if self.activity_identifier:
-                        get_query_string += "=" + self.activity_identifier
-                    if self.extra_params:
-                        get_query_string += "&" + self.extra_params
-                    grader_response = requests.get(
-                        self.grader_endpoint + get_query_string, headers=grader_headers
-                    )
-                    calculate_grade = False
-                    grades = []
-                    if "results" not in grader_response.json():
-                        if grader_response.status_code == 500:
-                            msg = grader_response.json()["errorMessage"]
-                            msg = self.i18n_service.gettext(msg)
-                        else:
-                            msg = self.i18n_service.gettext("We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team.")
-                        return {
-                            "grade": "",
-                            "reason": "",
-                            "results": "",
-                            "htmlFormat": "<span>{message}</span>".format(message=msg),
-                        }
-                    for result in grader_response.json()["results"]:
-                        if "grade" in result:
-                            grades.append(result["grade"])
-                    if len(grades) > 1:
-                        from operator import truediv
-
-                        total_grade = 0
-                        for g in grades:
-                            total_grade += g
-                        grade = int(truediv(total_grade * 100, len(grades)))
+            # 3. Make a call to the grader endpoint
+            if self.http_method == "get":
+                get_query_string = "?"
+                get_query_string += self.user_identifier_parameter
+                get_query_string += "=" + self.user_data().get(
+                    self.user_identifier, ""
+                )
+                if self.activity_identifier_parameter:
+                    get_query_string += "&" + self.activity_identifier_parameter
+                if self.activity_identifier:
+                    get_query_string += "=" + self.activity_identifier
+                if self.extra_params:
+                    get_query_string += "&" + self.extra_params
+                grader_response = requests.get(
+                    self.grader_endpoint + get_query_string, headers=grader_headers
+                )
+                calculate_grade = False
+                grades = []
+                if "results" not in grader_response.json():
+                    if grader_response.status_code == 500:
+                        msg = grader_response.json()["errorMessage"]
+                        msg = self.i18n_service.gettext(msg)
                     else:
-                        grade = grades[0] * 100
-                    reasons = []
-                    for result in grader_response.json()["results"]:
-                        if "grade" in result:
-                            if result["grade"] > 0:
-                                reason = self.i18n_service.gettext(
-                                    "Assignment {assignment_id}: <b>Passed</b>").format(
-                                        assignment_id=result["assignment_id"],
-                                    )
-                                reasons.append(reason)
-                            elif result["grade"] == 0: 
-                                reason_api_text = self.i18n_service.gettext(result["reason"])
-                                reason = self.i18n_service.gettext("Assignment {assignment_id}: <b>Failed</b> - {reason_api_text}").format(
+                        msg = self.i18n_service.gettext("We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team.")
+                    return {
+                        "grade": "",
+                        "reason": "",
+                        "results": "",
+                        "htmlFormat": "<span>{message}</span>".format(message=msg),
+                    }
+                for result in grader_response.json()["results"]:
+                    if "grade" in result:
+                        grades.append(result["grade"])
+                if len(grades) > 1:
+                    from operator import truediv
+
+                    total_grade = 0
+                    for g in grades:
+                        total_grade += g
+                    grade = int(truediv(total_grade * 100, len(grades)))
+                else:
+                    grade = grades[0] * 100
+                reasons = []
+                for result in grader_response.json()["results"]:
+                    if "grade" in result:
+                        if result["grade"] > 0:
+                            reason = self.i18n_service.gettext(
+                                "Assignment {assignment_id}: <b>Passed</b>").format(
                                     assignment_id=result["assignment_id"],
-                                    reason_api_text=reason_api_text,
                                 )
-                                reasons.append(reason)
-                        elif "grade" not in result:
+                            reasons.append(reason)
+                        elif result["grade"] == 0: 
                             reason_api_text = self.i18n_service.gettext(result["reason"])
-                            reason = self.i18n_service.gettext("Assignment {assignment_id}: - {reason_api_text} ").format(
+                            reason = self.i18n_service.gettext("Assignment {assignment_id}: <b>Failed</b> - {reason_api_text}").format(
                                 assignment_id=result["assignment_id"],
                                 reason_api_text=reason_api_text,
                             )
                             reasons.append(reason)
-                elif self.http_method == "post":
-                    grader_response = requests.post(
-                        self.grader_endpoint, headers=grader_headers
-                    )
-            except Exception as e:
-                LOGGER.exception(e)
-        else:
-            try:
-                # 3. Call graded endpoint
-                grader_headers = {"Content-Type": "application/json"}
-                # Make call based on the method in the studio xblock
-                if self.http_method == "get":
-                    grader_response = requests.get(
-                        self.grader_endpoint, headers=grader_headers
-                    )
-                elif self.http_method == "post":
-                    grader_response = requests.post(
-                        self.grader_endpoint, headers=grader_headers
-                    )
-            except Exception as e:
-                LOGGER.exception(e)
+                    elif "grade" not in result:
+                        reason_api_text = self.i18n_service.gettext(result["reason"])
+                        reason = self.i18n_service.gettext("Assignment {assignment_id}: - {reason_api_text} ").format(
+                            assignment_id=result["assignment_id"],
+                            reason_api_text=reason_api_text,
+                        )
+                        reasons.append(reason)
+            elif self.http_method == "post":
+                grader_response = requests.post(
+                    self.grader_endpoint, headers=grader_headers
+                )
+        except Exception as e:
+            LOGGER.exception(e)
 
         reasons_msg = ""
         for reason in reasons:
