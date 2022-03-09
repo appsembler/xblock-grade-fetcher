@@ -1,4 +1,4 @@
-from django.template import Context, Template
+from django.template import Context
 from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
@@ -10,11 +10,18 @@ import pkg_resources
 import requests
 import logging
 import os
-from django.template import Context
 from xblockutils.resources import ResourceLoader
 
 
 LOGGER = logging.getLogger(__name__)
+
+
+class DummyTranslationService(object):
+    """ TODO: this was added just to get flake8 to pass
+    `i8n_service()` returns an object of this type
+    but nothing is every defined or imported.
+    Please replace this class with the correct
+    DummyTranslationService """
 
 
 @XBlock.needs("i18n", "user")
@@ -245,6 +252,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             return i18n_service
         else:
             return DummyTranslationService()
+
     @XBlock.json_handler
     def grade_user(self, data, suffix=""):
         """
@@ -293,14 +301,17 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     grader_response = requests.get(
                         self.grader_endpoint + get_query_string, headers=grader_headers
                     )
-                    calculate_grade = False
                     grades = []
                     if "results" not in grader_response.json():
                         if grader_response.status_code == 500:
                             msg = grader_response.json()["errorMessage"]
                             msg = self.i18n_service.gettext(msg)
                         else:
-                            msg = self.i18n_service.gettext("We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team.")
+                            msg = self.i18n_service.gettext(
+                                "We cannot find your account on Customization. "
+                                "Please make sure that you have created your account. "
+                                "If you need assistance, please contact the course team."
+                            )
                         return {
                             "grade": "",
                             "reason": "",
@@ -328,19 +339,22 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                                         assignment_id=result["assignment_id"],
                                     )
                                 reasons.append(reason)
-                            elif result["grade"] == 0: 
+                            elif result["grade"] == 0:
                                 reason_api_text = self.i18n_service.gettext(result["reason"])
-                                reason = self.i18n_service.gettext("Assignment {assignment_id}: <b>Failed</b> - {reason_api_text}").format(
+                                reason = self.i18n_service.gettext(
+                                    "Assignment {assignment_id}: <b>Failed</b> - {reason_api_text}"
+                                ).format(
                                     assignment_id=result["assignment_id"],
                                     reason_api_text=reason_api_text,
                                 )
                                 reasons.append(reason)
                         elif "grade" not in result:
                             reason_api_text = self.i18n_service.gettext(result["reason"])
-                            reason = self.i18n_service.gettext("Assignment {assignment_id}: - {reason_api_text} ").format(
-                                assignment_id=result["assignment_id"],
-                                reason_api_text=reason_api_text,
-                            )
+                            reason = self.i18n_service.gettext(
+                                "Assignment {assignment_id}: - {reason_api_text} ").format(
+                                    assignment_id=result["assignment_id"],
+                                    reason_api_text=reason_api_text,
+                                )
                             reasons.append(reason)
                 elif self.http_method == "post":
                     grader_response = requests.post(
@@ -366,9 +380,11 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
 
         reasons_msg = ""
         for reason in reasons:
-            reasons_msg += "<li>{reason}</li>".format(reason=reason)                
-        self.htmlFormat = self.i18n_service.gettext("You got <span class='grade'>{grade}% </span> score for this activity.<br />Explanation: <span class='reason'><ul>{reasons_msg}</ul></span>").format(
-            grade=grade, reasons_msg=reasons_msg)
+            reasons_msg += "<li>{reason}</li>".format(reason=reason)
+        self.htmlFormat = self.i18n_service.gettext(
+            "You got <span class='grade'>{grade}% </span> score for this activity.<br />"
+            "Explanation: <span class='reason'><ul>{reasons_msg}</ul></span>").format(
+                grade=grade, reasons_msg=reasons_msg)
         # grade the user
         if grade >= 0:
             grade_event = {"value": grade * 1.00 / 100, "max_value": 1}

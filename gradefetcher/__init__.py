@@ -1,1 +1,1 @@
-from .gradefetcher import GradeFetcherXBlock
+from .gradefetcher import GradeFetcherXBlock  # noqa
