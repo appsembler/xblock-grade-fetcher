@@ -281,6 +281,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         "username": self.authentication_username,
                         "password": self.authentication_password,
                     },
+                    timeout=10,
                 )
                 # get the token from the call
                 token = auth_response.json()["access_token"]
@@ -303,7 +304,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                 if self.extra_params:
                     get_query_string += "&" + self.extra_params
                 grader_response = requests.get(
-                    self.grader_endpoint + get_query_string, headers=grader_headers
+                    self.grader_endpoint + get_query_string,
+                    headers=grader_headers,
+                    timeout=10,
                 )
                 calculate_grade = False
                 grades = []
@@ -356,7 +359,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         reasons.append(reason)
             elif self.http_method == "post":
                 grader_response = requests.post(
-                    self.grader_endpoint, headers=grader_headers
+                    self.grader_endpoint,
+                    headers=grader_headers,
+                    timeout=10,
                 )
         except Exception as e:
             LOGGER.exception(e)
