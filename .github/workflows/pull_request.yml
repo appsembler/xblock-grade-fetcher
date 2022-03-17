@@ -6,7 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        include:
+          - python-version: 3.8
+            tox-env: py3
+          - python-version: 3.5
+            tox-env: py3
+          - python-version: 3.8
+            tox-env: flake8
     steps:
       - uses: actions/checkout@v1
       - name: Set up Python ${{ matrix.python-version }}
@@ -18,5 +24,5 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install virtualenv tox tox-gh-actions
       - name: "Run tox targets for ${{ matrix.python-version }}"
-        run: "python -m tox"
+        run: "tox -e ${{ matrix.tox-env }}"
 
