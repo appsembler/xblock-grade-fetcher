@@ -1,18 +1,16 @@
-from django.template import Context, Template
-from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
+import logging
+import os
+
+import pkg_resources
+import requests
+from django.template import Context
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
-from xblockutils.studio_editable import StudioEditableXBlockMixin
-from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
-import pkg_resources
-import requests
-import logging
-import os
-from django.template import Context
 from xblockutils.resources import ResourceLoader
-
+from xblockutils.studio_editable import StudioEditableXBlockMixin
 
 LOGGER = logging.getLogger(__name__)
 
@@ -22,6 +20,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     """
     Get users grade from external systems
     """
+
     loader = ResourceLoader(__name__)
     has_score = True
     editable_fields = [
@@ -62,7 +61,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     user_identifier = String(
         display_name=_("User Identifier"),
-        help=_("This is the parameter we send to the grader to identify the user"),
+        help=_(
+            "This is the parameter we send to the grader to identify the user"
+            ),
         values=(
             {"display_name": _("email"), "value": "email"},
             {"display_name": _("username"), "value": "username"},
@@ -94,7 +95,10 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     reason = String(
         display_name=_(
-            "An explanation from the external grader system " "about the user's score"
+            """
+            An explanation from the external grader system
+            about the user's score
+            """
         ),
         help=_("Explanation from external grader"),
         scope=Scope.user_state,
@@ -114,13 +118,20 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     client_secret = String(
         display_name=_("Client Secret"),
-        help=_("OAuth2 client password to use for the authentication endpoint"),
+        help=_(
+            "OAuth2 client password to use for the authentication endpoint"
+            ),
         scope=Scope.settings,
         default="",
     )
     api_key = String(
         display_name=_("API Key"),
-        help=_("API Key to include in the header of the request as X-API-Key in the grader api"),
+        help=_(
+            """
+            API Key to include in the header of the request
+            as X-API-Key in the grader api
+            """
+        ),
         scope=Scope.settings,
         default="",
     )
@@ -138,7 +149,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     grader_endpoint = String(
         display_name=_("Grader Endpoint "),
-        help=_("This is an endpoint we call (with parameter) to get user's score"),
+        help=_(
+            "This is an endpoint we call (with parameter) to get user's score"
+            ),
         scope=Scope.settings,
         default="",
     )
@@ -153,7 +166,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     activity_identifier = String(
         display_name=_("Activity Identifier "),
-        help=_("An identifier to send to the grader to recognize the activity's unit"),
+        help=_(
+            """
+            An identifier to send to the grader to
+            recognize the activity's unit
+            """
+            ),
         scope=Scope.settings,
         default="",
     )
@@ -197,7 +215,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Gets the content of a resource
         """
-        resource_content = pkg_resources.resource_string(__name__, resource_path)
+        resource_content = pkg_resources.resource_string(
+            __name__, resource_path
+            )
         return resource_content.decode("utf8")
 
     def render_template(self, path, context=None):
@@ -205,9 +225,11 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         Evaluate a template by resource path, applying the provided context
         """
 
-        return self.loader.render_django_template(os.path.join('static/html', path),
-                                                  context=Context(context or {}),
-                                                  i18n_service=self.runtime.service(self, 'i18n'))
+        return self.loader.render_django_template(
+            os.path.join("static/html", path),
+            context=Context(context or {}),
+            i18n_service=self.runtime.service(self, "i18n"),
+        )
 
     def student_view(self, context=None):
         """
@@ -227,38 +249,42 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         html = self.render_template("gradefetcher.html", context)
         frag = Fragment(html)
         frag.add_css(self.load_resource("static/css/gradefetcher.css"))
-        frag.add_javascript(self.load_resource("static/js/src/gradefetcher.js"))
+        frag.add_javascript(
+            self.load_resource("static/js/src/gradefetcher.js")
+            )
         frag.initialize_js("GradeFetcherXBlock")
         return frag
 
     def studio_view(self, context=None):
         fragment = Fragment()
-        context = {'fields': []}
+        context = {"fields": []}
         # Build a list of all the fields that can be edited:
         for field_name in self.editable_fields:
             field = self.fields[field_name]
             if field.scope not in (Scope.content, Scope.settings):
                 raise ValueError(
-                    "Only Scope.content or Scope.settings fields can be used with "
-                    "StudioEditableXBlockMixin. Other scopes are for user-specific data and are "
-                    "not generally created/configured by content authors in Studio."
+                    "Only Scope.content or Scope.settings fields can be used "
+                    "with StudioEditableXBlockMixin. Other scopes are for  "
+                    "user-specific data and are not generally"
+                    "created/configured by content authors in Studio."
                 )
             field_info = self._make_field_info(field_name, field)
             if field_info is not None:
                 context["fields"].append(field_info)
-        fragment.content = self.render_template('studio_edit.html', context)
-        fragment.add_javascript(self.load_resource("static/js/src/studio_edit.js"))
-        fragment.initialize_js('StudioEditableXBlockMixin')
+        fragment.content = self.render_template("studio_edit.html", context)
+        fragment.add_javascript(
+            self.load_resource("static/js/src/studio_edit.js")
+            )
+        fragment.initialize_js("StudioEditableXBlockMixin")
         return fragment
 
     @property
     def i18n_service(self):
-        """ Obtains translation service """
+        """Obtains translation service"""
         i18n_service = self.runtime.service(self, "i18n")
         if i18n_service:
             return i18n_service
-        else:
-            return DummyTranslationService()
+
     @XBlock.json_handler
     def grade_user(self, data, suffix=""):
         """
@@ -286,41 +312,50 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                 # get the token from the call
                 token = auth_response.json()["access_token"]
                 # add the token to the headers
-                grader_headers["Authorization"] = "Bearer {token}".format(token=token)
+                grader_headers["Authorization"] = "Bearer {token}".format(
+                    token=token
+                    )
                 # add api key in the headers if it's set in studio
                 if self.api_key:
                     grader_headers["x-api-key"] = self.api_key
             # 3. Make a call to the grader endpoint
             if self.http_method == "get":
-                get_query_string = "?"
-                get_query_string += self.user_identifier_parameter
-                get_query_string += "=" + self.user_data().get(
+                query_string = "?"
+                query_string += self.user_identifier_parameter
+                query_string += "=" + self.user_data().get(
                     self.user_identifier, ""
-                )
+                    )
                 if self.activity_identifier_parameter:
-                    get_query_string += "&" + self.activity_identifier_parameter
+                    query_string += "&" + self.activity_identifier_parameter
                 if self.activity_identifier:
-                    get_query_string += "=" + self.activity_identifier
+                    query_string += "=" + self.activity_identifier
                 if self.extra_params:
-                    get_query_string += "&" + self.extra_params
+                    query_string += "&" + self.extra_params
                 grader_response = requests.get(
-                    self.grader_endpoint + get_query_string,
+                    self.grader_endpoint + query_string,
                     headers=grader_headers,
                     timeout=10,
                 )
-                calculate_grade = False
                 grades = []
                 if "results" not in grader_response.json():
                     if grader_response.status_code == 500:
                         msg = grader_response.json()["errorMessage"]
                         msg = self.i18n_service.gettext(msg)
                     else:
-                        msg = self.i18n_service.gettext("We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team.")
+                        msg = self.i18n_service.gettext(
+                            """
+                            We cannot find your account. Please make sure that
+                            you have created your account. If you need
+                            assistance, please contact the course team.
+                            """
+                        )
                     return {
                         "grade": "",
                         "reason": "",
                         "results": "",
-                        "htmlFormat": "<span>{message}</span>".format(message=msg),
+                        "htmlFormat": "<span>{message}</span>".format(
+                            message=msg
+                            ),
                     }
                 for result in grader_response.json()["results"]:
                     if "grade" in result:
@@ -339,20 +374,29 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     if "grade" in result:
                         if result["grade"] > 0:
                             reason = self.i18n_service.gettext(
-                                "Assignment {assignment_id}: <b>Passed</b>").format(
-                                    assignment_id=result["assignment_id"],
-                                )
-                            reasons.append(reason)
-                        elif result["grade"] == 0: 
-                            reason_api_text = self.i18n_service.gettext(result["reason"])
-                            reason = self.i18n_service.gettext("Assignment {assignment_id}: <b>Failed</b> - {reason_api_text}").format(
+                                "Assignment {assignment_id}: <b>Passed</b>"
+                            ).format(
                                 assignment_id=result["assignment_id"],
-                                reason_api_text=reason_api_text,
+                            )
+                            reasons.append(reason)
+                        elif result["grade"] == 0:
+                            reason_api_text = self.i18n_service.gettext(
+                                result["reason"]
+                            )
+                            reason = self.i18n_service.gettext(
+                                "Assignment {id}: <b>Failed</b> - {reason}"
+                            ).format(
+                                id=result["assignment_id"],
+                                reason=reason_api_text,
                             )
                             reasons.append(reason)
                     elif "grade" not in result:
-                        reason_api_text = self.i18n_service.gettext(result["reason"])
-                        reason = self.i18n_service.gettext("Assignment {assignment_id}: - {reason_api_text} ").format(
+                        reason_api_text = self.i18n_service.gettext(
+                            result["reason"]
+                            )
+                        reason = self.i18n_service.gettext(
+                            "Assignment {assignment_id}: - {reason_api_text} "
+                        ).format(
                             assignment_id=result["assignment_id"],
                             reason_api_text=reason_api_text,
                         )
@@ -368,15 +412,22 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
 
         reasons_msg = ""
         for reason in reasons:
-            reasons_msg += "<li>{reason}</li>".format(reason=reason)                
-        self.htmlFormat = self.i18n_service.gettext("You got <span class='grade'>{grade}% </span> score for this activity.<br />Explanation: <span class='reason'><ul>{reasons_msg}</ul></span>").format(
-            grade=grade, reasons_msg=reasons_msg)
+            reasons_msg += "<li>{reason}</li>".format(reason=reason)
+        self.htmlFormat = self.i18n_service.gettext(
+            "You got <span class='grade'>{grade}% </span>"
+            "score for this activity.<br />Explanation: <span class='reason'>"
+            "<ul>{reasons_msg}</ul></span>").format(
+                grade=grade, reasons_msg=reasons_msg)
         # grade the user
         if grade >= 0:
             grade_event = {"value": grade * 1.00 / 100, "max_value": 1}
             self.runtime.publish(self, "grade", grade_event)
 
-        return {"grade": grade, "reason": reasons, "htmlFormat": self.htmlFormat}
+        return {
+            "grade": grade,
+            "reason": reasons,
+            "htmlFormat": self.htmlFormat
+            }
 
     # workbench while developing your XBlock.
     @staticmethod
