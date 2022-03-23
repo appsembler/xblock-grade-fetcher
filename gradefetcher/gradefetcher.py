@@ -366,11 +366,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                             assistance, please contact the course team.
                             """
                         )
+                    htmlFormat = Markup("<span>{message}</span>")
                     return {
                         "grade": "",
                         "reason": "",
                         "results": "",
-                        "htmlFormat": "<span>{message}</span>".format(
+                        "htmlFormat": htmlFormat.format(
                             message=msg
                         ),
                     }
