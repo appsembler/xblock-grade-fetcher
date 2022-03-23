@@ -1,17 +1,17 @@
 import logging
 import os
+import urllib.parse
 
 import pkg_resources
 import requests
 from django.template import Context
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from markupsafe import Markup
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
-import urllib.parse
 
 LOGGER = logging.getLogger(__name__)
 
@@ -253,7 +253,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             "reason": self.reason,
             "authentication_endpoint": self.authentication_endpoint,
             "grader_endpoint": self.grader_endpoint,
-            "extra_params": mark_safe("&{}".format(self.extra_params)),
+            "extra_params": "&{}".format(Markup(self.extra_params))
         }
         html = self.render_template("gradefetcher.html", context)
         frag = Fragment(html)
