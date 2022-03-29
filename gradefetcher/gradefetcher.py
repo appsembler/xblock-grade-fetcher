@@ -3,18 +3,23 @@ import os
 
 import pkg_resources
 import requests
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.template import Context
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import URLValidator
-from django.core.exceptions import ValidationError
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
+from openedx.core.djangoapps.site_configuration import \
+    helpers as configuration_helpers
+
 LOGGER = logging.getLogger(__name__)
+
+loader = ResourceLoader(__name__)
 
 
 class DummyTranslationService(object):
@@ -317,6 +322,11 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Make a call to an external grader and retreive user's grade
         """
+        # Get EXTERNAL_GRADER from site configuration
+        grade_fetcher_settings = configuration_helpers.get_value(
+            "GRADE_FETCHER", ""
+        )
+        proxies = grade_fetcher_settings.get("proxies", {})
         # 1. If user in studio set authentication endpoint we call it
         try:
             grader_headers = {"Content-Type": "application/json"}
@@ -325,6 +335,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     # 2. Make call to auth endpoint and get the token
                     auth_response = requests.post(
                         self.authentication_endpoint,
+                        proxies=proxies,
                         auth=(
                             self.client_id,
                             self.client_secret,
@@ -374,6 +385,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         query_string += "&" + self.extra_params
                     grader_response = requests.get(
                         self.grader_endpoint + query_string,
+                        proxies=proxies,
                         headers=grader_headers,
                         timeout=10,
                     )
@@ -456,6 +468,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             elif self.http_method == "post":
                 grader_response = requests.post(
                     self.grader_endpoint,
+                    proxies=proxies,
                     headers=grader_headers,
                     timeout=10,
                 )
