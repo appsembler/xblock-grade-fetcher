@@ -347,7 +347,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     if self.api_key:
                         grader_headers["x-api-key"] = self.api_key
                 else:
-                    LOGGER.exception(
+                    LOGGER.warning(
                         "Authentication endpoint is not a valid url: %s",
                         self.authentication_endpoint,
                     )
@@ -443,7 +443,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                             )
                             reasons.append(reason)
                 else:
-                    LOGGER.exception(
+                    LOGGER.warning(
                         "Grader endpoint is not a valid url: %s",
                         self.grader_endpoint,
                     )
