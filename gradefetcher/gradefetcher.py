@@ -4,6 +4,8 @@ import urllib.parse
 
 import pkg_resources
 import requests
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 from markupsafe import Markup
@@ -70,9 +72,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     user_identifier = String(
         display_name=_("User Identifier"),
-        help=_(
-            "This is the parameter we send to the grader to identify the user"
-        ),
+        help=_("This is the parameter we send to the grader to identify the user"),
         values=(
             {"display_name": _("email"), "value": "email"},
             {"display_name": _("username"), "value": "username"},
@@ -127,9 +127,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     client_secret = String(
         display_name=_("Client Secret"),
-        help=_(
-            "OAuth2 client password to use for the authentication endpoint"
-        ),
+        help=_("OAuth2 client password to use for the authentication endpoint"),
         scope=Scope.settings,
         default="",
     )
@@ -158,9 +156,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     grader_endpoint = String(
         display_name=_("Grader Endpoint "),
-        help=_(
-            "This is an endpoint we call (with parameter) to get user's score"
-        ),
+        help=_("This is an endpoint we call (with parameter) to get user's score"),
         scope=Scope.settings,
         default="",
     )
@@ -206,6 +202,23 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         ),
     )
 
+    def is_valid_url(url):
+        """
+        Helper function used to check if a string is a valid url.
+
+        Args:
+            url (str): the url string to be validated
+
+        Returns:
+            bool: whether the url is valid or not
+        """
+        validate = URLValidator()
+        try:
+            validate(url)
+            return True
+        except ValidationError:
+            return False
+
     def user_data(self):
         """
         This method initializes user's parameters
@@ -224,9 +237,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Gets the content of a resource
         """
-        resource_content = pkg_resources.resource_string(
-            __name__, resource_path
-        )
+        resource_content = pkg_resources.resource_string(__name__, resource_path)
         return resource_content.decode("utf8")
 
     def render_template(self, path, context=None):
@@ -253,14 +264,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             "reason": self.reason,
             "authentication_endpoint": self.authentication_endpoint,
             "grader_endpoint": self.grader_endpoint,
-            "extra_params": "&{}".format(Markup(self.extra_params))
+            "extra_params": "&{}".format(Markup(self.extra_params)),
         }
         html = self.render_template("gradefetcher.html", context)
         frag = Fragment(html)
         frag.add_css(self.load_resource("static/css/gradefetcher.css"))
-        frag.add_javascript(
-            self.load_resource("static/js/src/gradefetcher.js")
-        )
+        frag.add_javascript(self.load_resource("static/js/src/gradefetcher.js"))
         frag.initialize_js("GradeFetcherXBlock")
         return frag
 
@@ -281,9 +290,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             if field_info is not None:
                 context["fields"].append(field_info)
         fragment.content = self.render_template("studio_edit.html", context)
-        fragment.add_javascript(
-            self.load_resource("static/js/src/studio_edit.js")
-        )
+        fragment.add_javascript(self.load_resource("static/js/src/studio_edit.js"))
         fragment.initialize_js("StudioEditableXBlockMixin")
         return fragment
 
@@ -304,121 +311,152 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             grader_headers = {"Content-Type": "application/json"}
             if self.authentication_endpoint:
                 # 2. Make call to auth endpoint and get the token
-                auth_response = requests.post(
-                    self.authentication_endpoint,
-                    auth=(
-                        self.client_id,
-                        self.client_secret,
-                    ),
-                    headers={"Accept": "application/json"},
-                    data={
-                        "grant_type": "password",
-                        "username": self.authentication_username,
-                        "password": self.authentication_password,
-                    },
-                    timeout=10,
-                )
-                # get the token from the call
-                token = auth_response.json()["access_token"]
-                # add the token to the headers
-                grader_headers["Authorization"] = "Bearer {token}".format(
-                    token=token
-                )
-                # add api key in the headers if it's set in studio
-                if self.api_key:
-                    grader_headers["x-api-key"] = self.api_key
-            # 3. Make a call to the grader endpoint
-            if self.http_method == "get":
-                query = {
-                    self.user_identifier_parameter: self.user_data()[
-                        self.user_identifier_parameter
-                    ]
-                }
-                if (
-                    self.activity_identifier_parameter
-                    and self.activity_identifier
-                ):
-                    query[
-                        self.activity_identifier_parameter
-                    ] = self.activity_identifier
-
-                if self.extra_params:
-                    query.update(urllib.parse.parse_qs(self.extra_params))
-                url = "{endpoint}?{query}".format(
-                    endpoint=self.grader_endpoint,
-                    query=urllib.parse.urlencode(query),
-                )
-                grader_response = requests.get(
-                    url,
-                    headers=grader_headers,
-                    timeout=10,
-                )
-                grades = []
-                if "results" not in grader_response.json():
-                    if grader_response.status_code == 500:
-                        msg = grader_response.json()["errorMessage"]
-                        msg = self.i18n_service.gettext(msg)
-                    else:
-                        msg = self.i18n_service.gettext(
-                            """
-                            We cannot find your account. Please make sure that
-                            you have created your account. If you need
-                            assistance, please contact the course team.
-                            """
-                        )
-                    htmlFormat = Markup("<span>{message}</span>")
+                if self.is_valid_url(self.authentication_endpoint):
+                    # 2. Make call to auth endpoint and get the token
+                    auth_response = requests.post(
+                        self.authentication_endpoint,
+                        auth=(
+                            self.client_id,
+                            self.client_secret,
+                        ),
+                        headers={"Accept": "application/json"},
+                        data={
+                            "grant_type": "password",
+                            "username": self.authentication_username,
+                            "password": self.authentication_password,
+                        },
+                        timeout=10,
+                    )
+                    # get the token from the call
+                    token = auth_response.json()["access_token"]
+                    # add the token to the headers
+                    grader_headers["Authorization"] = "Bearer {token}".format(
+                        token=token
+                    )
+                    # add api key in the headers if it's set in studio
+                    if self.api_key:
+                        grader_headers["x-api-key"] = self.api_key
+                else:
+                    LOGGER.warning(
+                        "Authentication endpoint is not a valid url: %s",
+                        self.authentication_endpoint,
+                    )
                     return {
-                        "grade": "",
-                        "reason": "",
-                        "results": "",
-                        "htmlFormat": htmlFormat.format(
-                            message=msg
+                        "status": "error",
+                        "message": self.i18n_service.ugettext(
+                            "Authentication endpoint is not a valid url"
                         ),
                     }
-                for result in grader_response.json()["results"]:
-                    if "grade" in result:
-                        grades.append(result["grade"])
-                if len(grades) > 1:
-                    from operator import truediv
-
-                    total_grade = 0
-                    for g in grades:
-                        total_grade += g
-                    grade = int(truediv(total_grade * 100, len(grades)))
-                else:
-                    grade = grades[0] * 100
-                reasons = []
-                for result in grader_response.json()["results"]:
-                    if "grade" in result:
-                        if result["grade"] > 0:
-                            reason = self.i18n_service.gettext(
-                                "Assignment {assignment_id}: <b>Passed</b>"
-                            ).format(
-                                assignment_id=result["assignment_id"],
+            # 3. Make a call to the grader endpoint
+            if self.http_method == "get":
+                if self.is_valid_url(self.grader_endpoint):
+                    query = {
+                        self.user_identifier_parameter: self.user_data()[
+                            self.user_identifier_parameter
+                        ]
+                    }
+                    if self.activity_identifier_parameter and self.activity_identifier:
+                        query[
+                            self.activity_identifier_parameter
+                        ] = self.activity_identifier
+                    if self.extra_params:
+                        query.update(urllib.parse.parse_qs(self.extra_params))
+                    url = "{endpoint}?{query}".format(
+                        endpoint=self.grader_endpoint,
+                        query=urllib.parse.urlencode(query),
+                    )
+                    grader_response = requests.get(
+                        url,
+                        headers=grader_headers,
+                        timeout=10,
+                    )
+                    grades = []
+                    if "results" not in grader_response.json():
+                        if grader_response.status_code == 500:
+                            msg = grader_response.json()["errorMessage"]
+                            msg = self.i18n_service.gettext(msg)
+                        else:
+                            msg = self.i18n_service.gettext(
+                                """
+                                We cannot find your account. Please make sure
+                                that you have created your account. If you need
+                                assistance, please contact the course team.
+                                """
                             )
-                            reasons.append(reason)
-                        elif result["grade"] == 0:
+                        htmlFormat = Markup("<span>{message}</span>")
+                        return {
+                            "grade": "",
+                            "reason": "",
+                            "results": "",
+                            "htmlFormat": htmlFormat.format(message=msg),
+                        }
+
+                    for result in grader_response.json()["results"]:
+                        if "grade" in result:
+                            grades.append(result["grade"])
+                    if len(grades) > 1:
+                        from operator import truediv
+
+                        total_grade = 0
+                        for g in grades:
+                            total_grade += g
+                        grade = int(truediv(total_grade * 100, len(grades)))
+                    else:
+                        grade = grades[0] * 100
+                    reasons = []
+                    for result in grader_response.json()["results"]:
+                        if "grade" in result:
+                            if result["grade"] > 0:
+                                reason = self.i18n_service.gettext(
+                                    "Assignment {assignment_id}: <b>Passed</b>"
+                                ).format(
+                                    assignment_id=result["assignment_id"],
+                                )
+                                reasons.append(reason)
+                            elif result["grade"] == 0:
+                                reason_api_text = self.i18n_service.gettext(
+                                    result["reason"]
+                                )
+                                reason = self.i18n_service.gettext(
+                                    "Assignment {id}: <b>Failed</b> - {reason}"
+                                ).format(
+                                    id=result["assignment_id"],
+                                    reason=reason_api_text,
+                                )
+                                reasons.append(reason)
+                        elif "grade" not in result:
                             reason_api_text = self.i18n_service.gettext(
                                 result["reason"]
                             )
                             reason = self.i18n_service.gettext(
-                                "Assignment {id}: <b>Failed</b> - {reason}"
+                                "Assignment {assignment_id}: {reason_api_text}"
                             ).format(
-                                id=result["assignment_id"],
-                                reason=reason_api_text,
+                                assignment_id=result["assignment_id"],
+                                reason_api_text=reason_api_text,
                             )
                             reasons.append(reason)
-                    elif "grade" not in result:
-                        reason_api_text = self.i18n_service.gettext(
-                            result["reason"]
-                        )
-                        reason = self.i18n_service.gettext(
-                            "Assignment {assignment_id}: - {reason_api_text} "
-                        ).format(
-                            assignment_id=result["assignment_id"],
-                            reason_api_text=reason_api_text,
-                        )
-                        reasons.append(reason)
+                        elif "grade" not in result:
+                            reason_api_text = self.i18n_service.gettext(
+                                result["reason"]
+                            )
+                            reason = self.i18n_service.gettext(
+                                "Assignment {assignment_id}:{reason_api_text} "
+                            ).format(
+                                assignment_id=result["assignment_id"],
+                                reason_api_text=reason_api_text,
+                            )
+                            reasons.append(reason)
+                else:
+                    LOGGER.warning(
+                        "Grader endpoint is not a valid url: %s",
+                        self.grader_endpoint,
+                    )
+                    return {
+                        "status": "error",
+                        "message": self.i18n_service.gettext(
+                            "Grader endpoint is not a valid url"
+                        ),
+                    }
             elif self.http_method == "post":
                 grader_response = requests.post(
                     self.grader_endpoint,
