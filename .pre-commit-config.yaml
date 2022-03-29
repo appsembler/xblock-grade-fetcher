@@ -1,5 +1,14 @@
 repos:
--   repo: https://gitlab.com/PyCQA/flake8
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: requirements-txt-fixer
+      - id: end-of-file-fixer
+  - repo: https://github.com/pycqa/flake8
     rev: 4.0.1
     hooks:
-    -   id: flake8
+      - id: flake8
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.4
+    hooks:
+      - id: bandit
