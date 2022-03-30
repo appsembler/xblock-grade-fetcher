@@ -14,9 +14,6 @@ from xblock.fields import Integer, Scope, String
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
-from openedx.core.djangoapps.site_configuration import \
-    helpers as configuration_helpers
-
 LOGGER = logging.getLogger(__name__)
 
 loader = ResourceLoader(__name__)
@@ -31,6 +28,7 @@ class DummyTranslationService(object):
 
 
 @XBlock.needs("i18n", "user")
+@XBlock.wants('settings')
 class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     """
     Get users grade from external systems
@@ -243,6 +241,16 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         user_data["anonymous_student_id"] = runtime.anonymous_student_id
         return user_data
 
+    def get_settings(self):
+        """
+        Get the XBlock settings bucket via the SettingsService.
+        """
+        settings_service = self.runtime.service(self, 'settings')
+        if settings_service:
+            return settings_service.get_settings_bucket(self)
+
+        return {}
+
     def load_resource(self, resource_path):
         """
         Gets the content of a resource
@@ -322,11 +330,8 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Make a call to an external grader and retreive user's grade
         """
-        # Get EXTERNAL_GRADER from site configuration
-        grade_fetcher_settings = configuration_helpers.get_value(
-            "GRADE_FETCHER", ""
-        )
-        proxies = grade_fetcher_settings.get("proxies", {})
+        # Get EXTERNAL_GRADER from configuration
+        proxies = self.get_settings()['proxies']
         # 1. If user in studio set authentication endpoint we call it
         try:
             grader_headers = {"Content-Type": "application/json"}
