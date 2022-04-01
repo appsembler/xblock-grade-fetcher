@@ -3,11 +3,11 @@ import os
 
 import pkg_resources
 import requests
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.template import Context
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import URLValidator
-from django.core.exceptions import ValidationError
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
@@ -15,6 +15,8 @@ from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
 LOGGER = logging.getLogger(__name__)
+
+loader = ResourceLoader(__name__)
 
 
 class DummyTranslationService(object):
@@ -26,6 +28,7 @@ class DummyTranslationService(object):
 
 
 @XBlock.needs("i18n", "user")
+@XBlock.wants('settings')
 class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     """
     Get users grade from external systems
@@ -238,6 +241,16 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         user_data["anonymous_student_id"] = runtime.anonymous_student_id
         return user_data
 
+    def get_settings(self):
+        """
+        Get the XBlock settings bucket via the SettingsService.
+        """
+        settings_service = self.runtime.service(self, 'settings')
+        if settings_service:
+            return settings_service.get_settings_bucket(self)
+
+        return {}
+
     def load_resource(self, resource_path):
         """
         Gets the content of a resource
@@ -317,6 +330,8 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Make a call to an external grader and retreive user's grade
         """
+        # Get EXTERNAL_GRADER from configuration
+        proxies = self.get_settings()['proxies']
         # 1. If user in studio set authentication endpoint we call it
         try:
             grader_headers = {"Content-Type": "application/json"}
@@ -325,6 +340,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     # 2. Make call to auth endpoint and get the token
                     auth_response = requests.post(
                         self.authentication_endpoint,
+                        proxies=proxies,
                         auth=(
                             self.client_id,
                             self.client_secret,
@@ -374,6 +390,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         query_string += "&" + self.extra_params
                     grader_response = requests.get(
                         self.grader_endpoint + query_string,
+                        proxies=proxies,
                         headers=grader_headers,
                         timeout=10,
                     )
@@ -456,6 +473,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             elif self.http_method == "post":
                 grader_response = requests.post(
                     self.grader_endpoint,
+                    proxies=proxies,
                     headers=grader_headers,
                     timeout=10,
                 )
