@@ -1,13 +1,14 @@
 import logging
 import os
+import urllib.parse
 
 import pkg_resources
 import requests
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.template import Context
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from markupsafe import Markup
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
@@ -20,15 +21,15 @@ loader = ResourceLoader(__name__)
 
 
 class DummyTranslationService(object):
-    """ TODO: this was added just to get flake8 to pass
+    """TODO: this was added just to get flake8 to pass
     `i8n_service()` returns an object of this type
     but nothing is every defined or imported.
     Please replace this class with the correct
-    DummyTranslationService """
+    DummyTranslationService"""
 
 
 @XBlock.needs("i18n", "user")
-@XBlock.wants('settings')
+@XBlock.wants("settings")
 class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     """
     Get users grade from external systems
@@ -74,9 +75,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     user_identifier = String(
         display_name=_("User Identifier"),
-        help=_(
-            "This is the parameter we send to the grader to identify the user"
-            ),
+        help=_("This is the parameter we send to the grader to identify the user"),
         values=(
             {"display_name": _("email"), "value": "email"},
             {"display_name": _("username"), "value": "username"},
@@ -131,9 +130,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     client_secret = String(
         display_name=_("Client Secret"),
-        help=_(
-            "OAuth2 client password to use for the authentication endpoint"
-            ),
+        help=_("OAuth2 client password to use for the authentication endpoint"),
         scope=Scope.settings,
         default="",
     )
@@ -162,9 +159,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
     )
     grader_endpoint = String(
         display_name=_("Grader Endpoint "),
-        help=_(
-            "This is an endpoint we call (with parameter) to get user's score"
-            ),
+        help=_("This is an endpoint we call (with parameter) to get user's score"),
         scope=Scope.settings,
         default="",
     )
@@ -184,7 +179,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             An identifier to send to the grader to
             recognize the activity's unit
             """
-            ),
+        ),
         scope=Scope.settings,
         default="",
     )
@@ -245,7 +240,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Get the XBlock settings bucket via the SettingsService.
         """
-        settings_service = self.runtime.service(self, 'settings')
+        settings_service = self.runtime.service(self, "settings")
         if settings_service:
             return settings_service.get_settings_bucket(self)
 
@@ -255,9 +250,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Gets the content of a resource
         """
-        resource_content = pkg_resources.resource_string(
-            __name__, resource_path
-            )
+        resource_content = pkg_resources.resource_string(__name__, resource_path)
         return resource_content.decode("utf8")
 
     def render_template(self, path, context=None):
@@ -284,14 +277,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             "reason": self.reason,
             "authentication_endpoint": self.authentication_endpoint,
             "grader_endpoint": self.grader_endpoint,
-            "extra_params": mark_safe("&{}".format(self.extra_params)),
+            "extra_params": "&{}".format(Markup(self.extra_params)),
         }
         html = self.render_template("gradefetcher.html", context)
         frag = Fragment(html)
         frag.add_css(self.load_resource("static/css/gradefetcher.css"))
-        frag.add_javascript(
-            self.load_resource("static/js/src/gradefetcher.js")
-            )
+        frag.add_javascript(self.load_resource("static/js/src/gradefetcher.js"))
         frag.initialize_js("GradeFetcherXBlock")
         return frag
 
@@ -312,9 +303,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             if field_info is not None:
                 context["fields"].append(field_info)
         fragment.content = self.render_template("studio_edit.html", context)
-        fragment.add_javascript(
-            self.load_resource("static/js/src/studio_edit.js")
-            )
+        fragment.add_javascript(self.load_resource("static/js/src/studio_edit.js"))
         fragment.initialize_js("StudioEditableXBlockMixin")
         return fragment
 
@@ -331,11 +320,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         Make a call to an external grader and retreive user's grade
         """
         # Get EXTERNAL_GRADER from configuration
-        proxies = self.get_settings()['proxies']
+        proxies = self.get_settings()["proxies"]
         # 1. If user in studio set authentication endpoint we call it
         try:
             grader_headers = {"Content-Type": "application/json"}
             if self.authentication_endpoint:
+                # 2. Make call to auth endpoint and get the token
                 if self.is_valid_url(self.authentication_endpoint):
                     # 2. Make call to auth endpoint and get the token
                     auth_response = requests.post(
@@ -358,7 +348,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     # add the token to the headers
                     grader_headers["Authorization"] = "Bearer {token}".format(
                         token=token
-                        )
+                    )
                     # add api key in the headers if it's set in studio
                     if self.api_key:
                         grader_headers["x-api-key"] = self.api_key
@@ -371,25 +361,24 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         "status": "error",
                         "message": self.i18n_service.ugettext(
                             "Authentication endpoint is not a valid url"
-                            ),
+                        ),
                     }
             # 3. Make a call to the grader endpoint
             if self.http_method == "get":
                 if self.is_valid_url(self.grader_endpoint):
-                    query_string = "?"
-                    query_string += self.user_identifier_parameter
-                    query_string += "=" + self.user_data().get(
-                        self.user_identifier, ""
-                        )
-                    if self.activity_identifier_parameter:
-                        query_string += "&"
-                        query_string += self.activity_identifier_parameter
-                    if self.activity_identifier:
-                        query_string += "=" + self.activity_identifier
+                    query = {
+                        self.user_identifier_parameter: self.user_data()[
+                            self.user_identifier_parameter
+                        ]
+                    }
+                    if self.activity_identifier_parameter and self.activity_identifier:
+                        query[
+                            self.activity_identifier_parameter
+                        ] = self.activity_identifier
                     if self.extra_params:
-                        query_string += "&" + self.extra_params
+                        query.update(urllib.parse.parse_qs(self.extra_params))
                     grader_response = requests.get(
-                        self.grader_endpoint + query_string,
+                        self.grader_endpoint + query,
                         proxies=proxies,
                         headers=grader_headers,
                         timeout=10,
@@ -407,14 +396,14 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                                 assistance, please contact the course team.
                                 """
                             )
+                        htmlFormat = Markup("<span>{message}</span>")
                         return {
                             "grade": "",
                             "reason": "",
                             "results": "",
-                            "htmlFormat": "<span>{message}</span>".format(
-                                message=msg
-                                ),
+                            "htmlFormat": htmlFormat.format(message=msg),
                         }
+
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
                             grades.append(result["grade"])
@@ -451,9 +440,20 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         elif "grade" not in result:
                             reason_api_text = self.i18n_service.gettext(
                                 result["reason"]
-                                )
+                            )
                             reason = self.i18n_service.gettext(
                                 "Assignment {assignment_id}: {reason_api_text}"
+                            ).format(
+                                assignment_id=result["assignment_id"],
+                                reason_api_text=reason_api_text,
+                            )
+                            reasons.append(reason)
+                        elif "grade" not in result:
+                            reason_api_text = self.i18n_service.gettext(
+                                result["reason"]
+                            )
+                            reason = self.i18n_service.gettext(
+                                "Assignment {assignment_id}:{reason_api_text} "
                             ).format(
                                 assignment_id=result["assignment_id"],
                                 reason_api_text=reason_api_text,
@@ -468,7 +468,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         "status": "error",
                         "message": self.i18n_service.gettext(
                             "Grader endpoint is not a valid url"
-                            ),
+                        ),
                     }
             elif self.http_method == "post":
                 grader_response = requests.post(
@@ -486,8 +486,8 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         self.htmlFormat = self.i18n_service.gettext(
             "You got <span class='grade'>{grade}% </span>"
             "score for this activity.<br />Explanation: <span class='reason'>"
-            "<ul>{reasons_msg}</ul></span>").format(
-                grade=grade, reasons_msg=reasons_msg)
+            "<ul>{reasons_msg}</ul></span>"
+        ).format(grade=grade, reasons_msg=reasons_msg)
         # grade the user
         if grade >= 0:
             grade_event = {"value": grade * 1.00 / 100, "max_value": 1}
@@ -496,8 +496,8 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         return {
             "grade": grade,
             "reason": reasons,
-            "htmlFormat": self.htmlFormat
-            }
+            "htmlFormat": self.htmlFormat,
+        }
 
     # workbench while developing your XBlock.
     @staticmethod
