@@ -1,6 +1,7 @@
 import logging
 import os
 import urllib.parse
+from operator import truediv
 
 import pkg_resources
 import requests
@@ -9,7 +10,6 @@ from django.core.validators import URLValidator
 from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 from markupsafe import Markup
-from operator import truediv
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
@@ -19,6 +19,17 @@ from xblockutils.studio_editable import StudioEditableXBlockMixin
 LOGGER = logging.getLogger(__name__)
 
 loader = ResourceLoader(__name__)
+
+
+def grade_from_list(grades):
+    if len(grades) > 1:
+        total_grade = 0
+        for g in grades:
+            total_grade += g
+        grade = int(truediv(total_grade * 100, len(grades)))
+    else:
+        grade = grades[0] * 100
+    return grade
 
 
 @XBlock.needs("i18n", "user")
