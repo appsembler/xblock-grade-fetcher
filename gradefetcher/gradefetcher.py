@@ -9,6 +9,7 @@ from django.core.validators import URLValidator
 from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 from markupsafe import Markup
+from operator import truediv
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
@@ -400,8 +401,6 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         if "grade" in result:
                             grades.append(result["grade"])
                     if len(grades) > 1:
-                        from operator import truediv
-
                         total_grade = 0
                         for g in grades:
                             total_grade += g
