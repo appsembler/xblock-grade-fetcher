@@ -20,14 +20,6 @@ LOGGER = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 
-class DummyTranslationService(object):
-    """TODO: this was added just to get flake8 to pass
-    `i8n_service()` returns an object of this type
-    but nothing is every defined or imported.
-    Please replace this class with the correct
-    DummyTranslationService"""
-
-
 @XBlock.needs("i18n", "user")
 @XBlock.wants("settings")
 class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
