@@ -23,9 +23,7 @@ loader = ResourceLoader(__name__)
 
 def grade_from_list(grades):
     if len(grades) > 1:
-        total_grade = 0
-        for g in grades:
-            total_grade += g
+        total_grade = sum(grades)
         grade = int(truediv(total_grade * 100, len(grades)))
     else:
         grade = grades[0] * 100
