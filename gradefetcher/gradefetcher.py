@@ -411,13 +411,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
                             grades.append(result["grade"])
-                    if len(grades) > 1:
-                        total_grade = 0
-                        for g in grades:
-                            total_grade += g
-                        grade = int(truediv(total_grade * 100, len(grades)))
-                    else:
-                        grade = grades[0] * 100
+                    grade = grade_from_list(grades)
                     reasons = []
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
