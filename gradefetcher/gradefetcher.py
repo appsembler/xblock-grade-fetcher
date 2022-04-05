@@ -22,6 +22,7 @@ loader = ResourceLoader(__name__)
 
 
 def grade_from_list(grades):
+    """take a list of integers and calculate grade from them"""
     if len(grades) > 1:
         total_grade = sum(grades)
         grade = int(truediv(total_grade * 100, len(grades)))
