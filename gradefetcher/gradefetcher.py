@@ -1,6 +1,7 @@
 import logging
 import os
 import urllib.parse
+from operator import truediv
 
 import pkg_resources
 import requests
@@ -18,6 +19,16 @@ from xblockutils.studio_editable import StudioEditableXBlockMixin
 LOGGER = logging.getLogger(__name__)
 
 loader = ResourceLoader(__name__)
+
+
+def grade_from_list(grades):
+    """take a list of integers and calculate grade from them"""
+    if len(grades) > 1:
+        total_grade = sum(grades)
+        grade = int(truediv(total_grade * 100, len(grades)))
+    else:
+        grade = grades[0] * 100
+    return grade
 
 
 @XBlock.needs("i18n", "user")
@@ -399,15 +410,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
                             grades.append(result["grade"])
-                    if len(grades) > 1:
-                        from operator import truediv
-
-                        total_grade = 0
-                        for g in grades:
-                            total_grade += g
-                        grade = int(truediv(total_grade * 100, len(grades)))
-                    else:
-                        grade = grades[0] * 100
+                    grade = grade_from_list(grades)
                     reasons = []
                     for result in grader_response.json()["results"]:
                         if "grade" in result:
