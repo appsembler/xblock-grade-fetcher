@@ -208,7 +208,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         ),
     )
 
-    def is_valid_url(url):
+    def is_valid_url(self, url):
         """
         Helper function used to check if a string is a valid url.
 
