@@ -11,6 +11,27 @@ from gradefetcher.gradefetcher import GradeFetcherXBlock, grade_from_list
 django.setup()
 
 
+class DummyFieldData(object):
+    pass
+
+
+class StubRuntime(object):
+    """fake runtime that returns our other fake services"""
+
+    @staticmethod
+    def service(self, service):
+        services = {
+            "i18n": StubI18n(),
+            "field-data": DummyFieldData(),
+        }
+        return services[service]
+
+
+class StubJSONRequest(object):
+    method = "POST"
+    body = b"{}"
+
+
 class GradeFetcherHelperTests(unittest.TestCase):
     def setUp(self):
         self.runtime = TestRuntime(
@@ -120,6 +141,7 @@ class GradeFetcherHelperTests(unittest.TestCase):
             services={"field-data": DictFieldData({}), "i18n": StubI18n()}
         )
         block = GradeFetcherXBlock(runtime=runtime, scope_ids=None)
+        block.grader_endpoint = "https://www.example.com/"
         block.authentication_endpoint = "None"
         block.get_settings = Mock(return_value=self.settings_bucket)
         response = block.grade_user(request_wrap())
@@ -209,6 +231,18 @@ class GradeFetcherHelperTests(unittest.TestCase):
         grade, reasons = self.block.process_grader_response(grader_response)
         assert grade == 33
         assert len(reasons) == 3
+
+    def test_rejects_invalid_grader_endpoint(self):
+        block = GradeFetcherXBlock(runtime=StubRuntime(), scope_ids=None)
+
+        # give it an invalid grade_endpoint
+        block.grader_endpoint = "notaURL"
+
+        # grade_user() should always fail since
+        # the grader_endpoint is invalid
+        result = block.grade_user(StubJSONRequest())
+        assert result.json["status"] == "error"
+        assert result.json["message"] == "Grader endpoint is not a valid url"
 
 
 def request_wrap():

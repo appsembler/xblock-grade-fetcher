@@ -389,6 +389,18 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         Make a call to an external grader and retreive user's grade
         """
 
+        if not self.is_valid_url(self.grader_endpoint):
+            LOGGER.warning(
+                "Grader endpoint is not a valid url: %s",
+                self.grader_endpoint,
+            )
+            return {
+                "status": "error",
+                "message": self.i18n_service.gettext(
+                    "Grader endpoint is not a valid url"
+                ),
+            }
+
         # 1. If user in studio set authentication endpoint we call it
         try:
             # Get EXTERNAL_GRADER from configuration
@@ -435,41 +447,27 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     }
             # 3. Make a call to the grader endpoint
             if self.http_method == "get":
-                if self.is_valid_url(self.grader_endpoint):
-                    query = {
-                        self.user_identifier_parameter: self.user_data()[
-                            self.user_identifier
-                        ]
-                    }
-                    if self.activity_identifier_parameter and self.activity_identifier:
-                        query[
-                            self.activity_identifier_parameter
-                        ] = self.activity_identifier
-                    if self.extra_params:
-                        query.update(urllib.parse.parse_qs(self.extra_params))
-                    grader_response = requests.get(
-                        self.grader_endpoint,
-                        params=query,
-                        proxies=proxies,
-                        headers=grader_headers,
-                        timeout=15,
-                    )
-                    grader_failed = self.grader_response_failed(grader_response)
-                    if grader_failed:
-                        return grader_failed
-                    else:
-                        grade, reasons = self.process_grader_response(grader_response)
+                query = {
+                    self.user_identifier_parameter: self.user_data()[
+                        self.user_identifier
+                    ]
+                }
+                if self.activity_identifier_parameter and self.activity_identifier:
+                    query[self.activity_identifier_parameter] = self.activity_identifier
+                if self.extra_params:
+                    query.update(urllib.parse.parse_qs(self.extra_params))
+                grader_response = requests.get(
+                    self.grader_endpoint,
+                    params=query,
+                    proxies=proxies,
+                    headers=grader_headers,
+                    timeout=15,
+                )
+                grader_failed = self.grader_response_failed(grader_response)
+                if grader_failed:
+                    return grader_failed
                 else:
-                    LOGGER.warning(
-                        "Grader endpoint is not a valid url: %s",
-                        self.grader_endpoint,
-                    )
-                    return {
-                        "status": "error",
-                        "message": self.i18n_service.gettext(
-                            "Grader endpoint is not a valid url"
-                        ),
-                    }
+                    grade, reasons = self.process_grader_response(grader_response)
         except Exception as e:
             LOGGER.exception(e)
             msg = self.i18n_service.gettext(
