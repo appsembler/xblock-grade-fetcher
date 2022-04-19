@@ -454,13 +454,6 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                             "Grader endpoint is not a valid url"
                         ),
                     }
-            elif self.http_method == "post":
-                grader_response = requests.post(
-                    self.grader_endpoint,
-                    proxies=proxies,
-                    headers=grader_headers,
-                    timeout=10,
-                )
         except Exception as e:
             LOGGER.exception(e)
 
