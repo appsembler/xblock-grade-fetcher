@@ -443,17 +443,6 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                                 reason_api_text=reason_api_text,
                             )
                             reasons.append(reason)
-                        elif "grade" not in result:
-                            reason_api_text = self.i18n_service.gettext(
-                                result["reason"]
-                            )
-                            reason = self.i18n_service.gettext(
-                                "Assignment {assignment_id}:{reason_api_text} "
-                            ).format(
-                                assignment_id=result["assignment_id"],
-                                reason_api_text=reason_api_text,
-                            )
-                            reasons.append(reason)
                 else:
                     LOGGER.warning(
                         "Grader endpoint is not a valid url: %s",
