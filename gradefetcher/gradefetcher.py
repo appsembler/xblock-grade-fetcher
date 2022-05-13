@@ -246,7 +246,6 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         settings_service = self.runtime.service(self, "settings")
         if settings_service:
             return settings_service.get_settings_bucket(self)
-
         return {}
 
     def load_resource(self, resource_path):
@@ -322,10 +321,11 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Make a call to an external grader and retreive user's grade
         """
-        # Get EXTERNAL_GRADER from configuration
-        proxies = self.get_settings()["proxies"]
+
         # 1. If user in studio set authentication endpoint we call it
         try:
+            # Get EXTERNAL_GRADER from configuration
+            proxies = self.get_settings()["proxies"]
             grader_headers = {"Content-Type": "application/json"}
             if self.authentication_endpoint:
                 # 2. Make call to auth endpoint and get the token
@@ -380,8 +380,9 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         ] = self.activity_identifier
                     if self.extra_params:
                         query.update(urllib.parse.parse_qs(self.extra_params))
+                    str_query = urllib.parse.urlencode(query)
                     grader_response = requests.get(
-                        self.grader_endpoint + query,
+                        self.grader_endpoint + str_query,
                         proxies=proxies,
                         headers=grader_headers,
                         timeout=10,
@@ -456,6 +457,18 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     }
         except Exception as e:
             LOGGER.exception(e)
+            msg = self.i18n_service.gettext(
+                """
+                Something went wrong, please contact the course team.
+                """
+            )
+            htmlFormat = Markup("<span>{message}</span>")
+            return {
+                "grade": "",
+                "reason": "",
+                "results": "",
+                "htmlFormat": htmlFormat.format(message=msg),
+            }
 
         reasons_msg = ""
         for reason in reasons:
