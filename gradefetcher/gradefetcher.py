@@ -246,7 +246,6 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         settings_service = self.runtime.service(self, "settings")
         if settings_service:
             return settings_service.get_settings_bucket(self)
-
         return {}
 
     def load_resource(self, resource_path):
@@ -322,10 +321,11 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         """
         Make a call to an external grader and retreive user's grade
         """
-        # Get EXTERNAL_GRADER from configuration
-        proxies = self.get_settings()["proxies"]
+
         # 1. If user in studio set authentication endpoint we call it
         try:
+            # Get EXTERNAL_GRADER from configuration
+            proxies = self.get_settings()["proxies"]
             grader_headers = {"Content-Type": "application/json"}
             if self.authentication_endpoint:
                 # 2. Make call to auth endpoint and get the token
