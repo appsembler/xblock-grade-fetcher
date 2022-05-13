@@ -457,6 +457,18 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     }
         except Exception as e:
             LOGGER.exception(e)
+            msg = self.i18n_service.gettext(
+                """
+                Something went wrong, please contact the course team.
+                """
+            )
+            htmlFormat = Markup("<span>{message}</span>")
+            return {
+                "grade": "",
+                "reason": "",
+                "results": "",
+                "htmlFormat": htmlFormat.format(message=msg),
+            }
 
         reasons_msg = ""
         for reason in reasons:
