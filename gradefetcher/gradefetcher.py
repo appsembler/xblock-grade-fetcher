@@ -101,6 +101,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         ),
         default="email",
         scope=Scope.settings,
+        null=False,
     )
     grade = Integer(
         display_name=_("User's Grade"),
@@ -165,6 +166,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         help=_("This is an endpoint we call (with parameter) to get user's score"),
         scope=Scope.settings,
         default="",
+        null=False,
     )
     http_method = String(
         display_name=_("HTTP call method"),
@@ -185,6 +187,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         ),
         scope=Scope.settings,
         default="",
+        null=False,
     )
     activity_identifier_parameter = String(
         display_name=_("Activity identifier parameter name"),
@@ -194,6 +197,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         ),
         default="unit_id",
         scope=Scope.settings,
+        null=False,
     )
     extra_params = String(
         display_name=_("Extra Parameters:"),
@@ -371,7 +375,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                 if self.is_valid_url(self.grader_endpoint):
                     query = {
                         self.user_identifier_parameter: self.user_data()[
-                            self.user_identifier_parameter
+                            self.user_identifier
                         ]
                     }
                     if self.activity_identifier_parameter and self.activity_identifier:
