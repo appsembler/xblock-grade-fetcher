@@ -384,12 +384,12 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         ] = self.activity_identifier
                     if self.extra_params:
                         query.update(urllib.parse.parse_qs(self.extra_params))
-                    str_query = urllib.parse.urlencode(query)
                     grader_response = requests.get(
-                        self.grader_endpoint + str_query,
+                        self.grader_endpoint,
+                        params=query,
                         proxies=proxies,
                         headers=grader_headers,
-                        timeout=10,
+                        timeout=15,
                     )
                     grades = []
                     if "results" not in grader_response.json():
