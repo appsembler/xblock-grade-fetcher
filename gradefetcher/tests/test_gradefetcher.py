@@ -5,7 +5,6 @@ import django
 from django.conf import settings
 from mock import Mock
 from xblock.field_data import DictFieldData
-from xblock.runtime import Runtime
 from xblock.test.tools import TestRuntime
 
 from gradefetcher.gradefetcher import GradeFetcherXBlock, grade_from_list
