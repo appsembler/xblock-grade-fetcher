@@ -2,14 +2,12 @@ import json
 import unittest
 
 import django
-from django.conf import settings
 from mock import Mock
 from xblock.field_data import DictFieldData
 from xblock.test.tools import TestRuntime
 
 from gradefetcher.gradefetcher import GradeFetcherXBlock, grade_from_list
 
-settings.configure(Debug=True)
 django.setup()
 
 
@@ -184,7 +182,7 @@ class GradeFetcherHelperTests(unittest.TestCase):
                 "results": [
                     {
                         "resultOrder": 1,
-                        "resultName": "Create one or more organisation units under root hierarchy.",
+                        "resultName": "Create one or more organisation units.",
                         "assignment_id": 1,
                         "grade": 1,
                         "reason": "Passed",
@@ -194,14 +192,14 @@ class GradeFetcherHelperTests(unittest.TestCase):
                         "resultName": "Create a Data Set.",
                         "assignment_id": 2,
                         "grade": 0,
-                        "reason": "It seems that your data set is not yet assigned to any organisation units.",
+                        "reason": "Your data set is not yet assigned.",
                     },
                     {
                         "resultOrder": 3,
                         "resultName": "Enter data on the data set.",
                         "assignment_id": 3,
                         "grade": 0,
-                        "reason": "It seems that you have not yet assigned your data elements to your data set, therefore you can't enter data. Check that data elements are assigned to the data set that was created for you. ",
+                        "reason": "You haven't assigned your data elements",
                     },
                 ],
                 "username": "test@example.com",

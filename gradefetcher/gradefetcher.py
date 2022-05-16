@@ -287,9 +287,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     )
                     reasons.append(reason)
                 elif result["grade"] == 0:
-                    reason_api_text = self.i18n_service.gettext(
-                        result["reason"]
-                    )
+                    reason_api_text = self.i18n_service.gettext(result["reason"])
                     reason = self.i18n_service.gettext(
                         "Assignment {id}: <b>Failed</b> - {reason}"
                     ).format(
@@ -298,9 +296,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     )
                     reasons.append(reason)
             elif "grade" not in result:
-                reason_api_text = self.i18n_service.gettext(
-                    result["reason"]
-                )
+                reason_api_text = self.i18n_service.gettext(result["reason"])
                 reason = self.i18n_service.gettext(
                     "Assignment {assignment_id}: {reason_api_text}"
                 ).format(
@@ -458,11 +454,11 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         headers=grader_headers,
                         timeout=15,
                     )
-                    grader_failed = grader_response_failed(grader_response)
+                    grader_failed = self.grader_response_failed(grader_response)
                     if grader_failed:
                         return grader_failed
                     else:
-                        grade, reasons = process_grader_response(grader_response)
+                        grade, reasons = self.process_grader_response(grader_response)
                 else:
                     LOGGER.warning(
                         "Grader endpoint is not a valid url: %s",
