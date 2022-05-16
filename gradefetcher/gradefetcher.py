@@ -26,8 +26,10 @@ def grade_from_list(grades):
     if len(grades) > 1:
         total_grade = sum(grades)
         grade = int(truediv(total_grade * 100, len(grades)))
-    else:
+    elif len(grades) == 1:
         grade = grades[0] * 100
+    else:
+        grade = 0
     return grade
 
 
@@ -243,6 +245,71 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
         user_data["anonymous_student_id"] = runtime.anonymous_student_id
         return user_data
 
+    def grader_response_failed(self, grader_response):
+        if "results" not in grader_response.json():
+            if grader_response.status_code == 500:
+                msg = grader_response.json()["errorMessage"]
+                msg = self.i18n_service.gettext(msg)
+            else:
+                msg = self.i18n_service.gettext(
+                    """
+                    We cannot find your account. Please make sure
+                    that you have created your account. If you need
+                    assistance, please contact the course team.
+                    """
+                )
+            htmlFormat = Markup("<span>{message}</span>")
+            return {
+                "status": "error",
+                "msg": msg,
+                "grade": "",
+                "reason": "",
+                "results": "",
+                "htmlFormat": htmlFormat.format(message=msg),
+            }
+        else:
+            return False
+
+    def process_grader_response(self, grader_response):
+        grades = []
+        for result in grader_response.json()["results"]:
+            if "grade" in result:
+                grades.append(result["grade"])
+        grade = grade_from_list(grades)
+        reasons = []
+        for result in grader_response.json()["results"]:
+            if "grade" in result:
+                if result["grade"] > 0:
+                    reason = self.i18n_service.gettext(
+                        "Assignment {assignment_id}: <b>Passed</b>"
+                    ).format(
+                        assignment_id=result["assignment_id"],
+                    )
+                    reasons.append(reason)
+                elif result["grade"] == 0:
+                    reason_api_text = self.i18n_service.gettext(
+                        result["reason"]
+                    )
+                    reason = self.i18n_service.gettext(
+                        "Assignment {id}: <b>Failed</b> - {reason}"
+                    ).format(
+                        id=result["assignment_id"],
+                        reason=reason_api_text,
+                    )
+                    reasons.append(reason)
+            elif "grade" not in result:
+                reason_api_text = self.i18n_service.gettext(
+                    result["reason"]
+                )
+                reason = self.i18n_service.gettext(
+                    "Assignment {assignment_id}: {reason_api_text}"
+                ).format(
+                    assignment_id=result["assignment_id"],
+                    reason_api_text=reason_api_text,
+                )
+                reasons.append(reason)
+        return grade, reasons
+
     def get_settings(self):
         """
         Get the XBlock settings bucket via the SettingsService.
@@ -391,63 +458,11 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                         headers=grader_headers,
                         timeout=15,
                     )
-                    grades = []
-                    if "results" not in grader_response.json():
-                        if grader_response.status_code == 500:
-                            msg = grader_response.json()["errorMessage"]
-                            msg = self.i18n_service.gettext(msg)
-                        else:
-                            msg = self.i18n_service.gettext(
-                                """
-                                We cannot find your account. Please make sure
-                                that you have created your account. If you need
-                                assistance, please contact the course team.
-                                """
-                            )
-                        htmlFormat = Markup("<span>{message}</span>")
-                        return {
-                            "grade": "",
-                            "reason": "",
-                            "results": "",
-                            "htmlFormat": htmlFormat.format(message=msg),
-                        }
-
-                    for result in grader_response.json()["results"]:
-                        if "grade" in result:
-                            grades.append(result["grade"])
-                    grade = grade_from_list(grades)
-                    reasons = []
-                    for result in grader_response.json()["results"]:
-                        if "grade" in result:
-                            if result["grade"] > 0:
-                                reason = self.i18n_service.gettext(
-                                    "Assignment {assignment_id}: <b>Passed</b>"
-                                ).format(
-                                    assignment_id=result["assignment_id"],
-                                )
-                                reasons.append(reason)
-                            elif result["grade"] == 0:
-                                reason_api_text = self.i18n_service.gettext(
-                                    result["reason"]
-                                )
-                                reason = self.i18n_service.gettext(
-                                    "Assignment {id}: <b>Failed</b> - {reason}"
-                                ).format(
-                                    id=result["assignment_id"],
-                                    reason=reason_api_text,
-                                )
-                                reasons.append(reason)
-                        elif "grade" not in result:
-                            reason_api_text = self.i18n_service.gettext(
-                                result["reason"]
-                            )
-                            reason = self.i18n_service.gettext(
-                                "Assignment {assignment_id}: {reason_api_text}"
-                            ).format(
-                                assignment_id=result["assignment_id"],
-                                reason_api_text=reason_api_text,
-                            )
-                            reasons.append(reason)
+                    grader_failed = grader_response_failed(grader_response)
+                    if grader_failed:
+                        return grader_failed
+                    else:
+                        grade, reasons = process_grader_response(grader_response)
                 else:
                     LOGGER.warning(
                         "Grader endpoint is not a valid url: %s",
@@ -468,6 +483,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             )
             htmlFormat = Markup("<span>{message}</span>")
             return {
+                "msg": "Something went wrong, please contact the course team.",
                 "grade": "",
                 "reason": "",
                 "results": "",
