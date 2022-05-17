@@ -24,7 +24,7 @@ def package_data(pkg, roots):
 
 setup(
     name='xblock-grade-fetcher',
-    version='0.4.2',
+    version='0.4.3',
     description='Grade Fetcher',
     license='AGPL v3',
     packages=[
