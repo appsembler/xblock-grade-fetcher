@@ -394,11 +394,15 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                 "Grader endpoint is not a valid url: %s",
                 self.grader_endpoint,
             )
+            msg = self.i18n_service.gettext("Grader endpoint is not a valid url")
+            htmlFormat = Markup("<span>{message}</span>")
             return {
                 "status": "error",
-                "message": self.i18n_service.gettext(
-                    "Grader endpoint is not a valid url"
-                ),
+                "msg": msg,
+                "grade": "",
+                "reason": "",
+                "results": "",
+                "htmlFormat": htmlFormat.format(message=msg),
             }
 
         # 1. If user in studio set authentication endpoint we call it

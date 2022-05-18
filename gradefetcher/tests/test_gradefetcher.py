@@ -156,7 +156,7 @@ class GradeFetcherHelperTests(unittest.TestCase):
         block.grader_endpoint = "None"
         block.get_settings = Mock(return_value=self.settings_bucket)
         response = block.grade_user(request_wrap())
-        assert response.json["message"] == "Grader endpoint is not a valid url"
+        assert response.json["msg"] == "Grader endpoint is not a valid url"
         assert response.json["status"] == "error"
 
     def test_grader_response_failed(self):
@@ -242,7 +242,7 @@ class GradeFetcherHelperTests(unittest.TestCase):
         # the grader_endpoint is invalid
         result = block.grade_user(StubJSONRequest())
         assert result.json["status"] == "error"
-        assert result.json["message"] == "Grader endpoint is not a valid url"
+        assert result.json["msg"] == "Grader endpoint is not a valid url"
 
 
 def request_wrap():
