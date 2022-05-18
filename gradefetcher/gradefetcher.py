@@ -402,14 +402,10 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
             }
 
         if not self.grader_endpoint:
-            LOGGER.warning(
-                "Grader endpoint is not set"
-            )
+            LOGGER.warning("Grader endpoint is not set")
             return {
                 "status": "error",
-                "message": self.i18n_service.gettext(
-                    "Grader endpoint is not set"
-                ),
+                "message": self.i18n_service.gettext("Grader endpoint is not set"),
             }
 
         # 1. If user in studio set authentication endpoint we call it
