@@ -283,7 +283,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     reason = self.i18n_service.gettext(
                         "Assignment {assignment_id}: <b>Passed</b>"
                     ).format(
-                        assignment_id=result["assignment_id"],
+                        assignment_id=result.get("assignment_id", ""),
                     )
                     reasons.append(reason)
                 elif result["grade"] == 0:
@@ -300,7 +300,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                 reason = self.i18n_service.gettext(
                     "Assignment {assignment_id}: {reason_api_text}"
                 ).format(
-                    assignment_id=result["assignment_id"],
+                    assignment_id=result.get("assignment_id", ""),
                     reason_api_text=reason_api_text,
                 )
                 reasons.append(reason)
@@ -465,7 +465,7 @@ class GradeFetcherXBlock(XBlock, StudioEditableXBlockMixin):
                     params=query,
                     proxies=proxies,
                     headers=grader_headers,
-                    timeout=15,
+                    timeout=25,
                 )
                 grader_failed = self.grader_response_failed(grader_response)
                 if grader_failed:
