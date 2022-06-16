@@ -150,3 +150,39 @@ msgstr "Il semble que votre ensemble de données ne soit rattaché à aucune de 
 #: gradefetcher/static/html/gradefetcher.html
 msgid "User did not create any Facility-level Org Units."
 msgstr "L'utilisateur n'a créé aucune unité organisationnelle au niveau de l'établissement."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "We could not find your Malaria program. Please make sure that the program that you want to be graded has the word 'Malaria' in its name. "
+msgstr "Nous n'avons pas pu trouver votre programme sur le paludisme. Veuillez vous assurer que le programme que vous souhaitez voir noté comporte le mot 'Paludisme' ou 'Malaria' dans son nom. "
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not assigned an organisation unit to your Malaria program"
+msgstr "Il semble qu'aucune unité d'organisation n'ait été associé à votre programme 'Paludisme'."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not assigned one or more of your data elements to your Malaria program. "
+msgstr "Il semble qu'aucun élément de données n'ait été a à votre programme 'Paludisme'."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created an option set for your data elements that have been assigned to your Malaria program"
+msgstr "Il semble qu'aucun ensemble d'options n'ait été créé pour les éléments de données qui ont été attribués à votre programme 'Paludisme'."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created options for your option set"
+msgstr "Il semble qu'aucune option n'ait été créée pour votre ensemble d'options."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems like your program's data elements are not added to groups, or they are not of the Tracker type. "
+msgstr "Il semble que les éléments de données de votre programme ne soient pas ajoutés aux groupes, ou qu'ils ne soient pas du type Tracker. "
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems you have not created a section form for your Malaria program"
+msgstr "Il semble qu'aucun formulaire de section n'ait été créé pour votre programme 'Paludisme'."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems you have not assigned your user access to your Malaria program. Please check the sharing settings for your program and that you have access to both data and metadata. "
+msgstr "Il semble que vous n'ayez pas attribué à votre utilisateur l'accès à votre programme 'Paludisme'. Veuillez vérifier les paramètres de partage de votre programme et vous assurer que vous avez accès à la fois aux données et aux métadonnées."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created an event or have not entered any data into it for your Malaria program"
+msgstr "Il semble qu'aucun événement n'ait été créé ou qu'aucune donnée n'ait été saisie dans votre programme 'Paludisme'."
