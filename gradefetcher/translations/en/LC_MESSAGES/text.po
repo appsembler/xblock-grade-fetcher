@@ -1,0 +1,306 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-30 14:00-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: gradefetcher/gradefetcher.py:64
+msgid "Display Name"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:65
+msgid "Display name for this module"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:70
+msgid "Title"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:71
+msgid "Title to show to the users"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:76
+msgid "Button text"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:77
+msgid "Text to show for the button"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:82
+msgid "User Identifier"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:83
+msgid "This is the parameter we send to the grader to identify the user"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:85
+msgid "email"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:86
+msgid "username"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:87
+msgid "user_id"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:89
+msgid "anonymous_student_id"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:96
+msgid "User identifier parameter name"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:98
+msgid ""
+"this is a parameter we use in HTTP call to send user_identifierto the grader "
+"system, for example email or username.If your system use custom parameter "
+"feel free to change it accordingly for example if your system uses, user_id "
+"to identifythe user you should set this to user_id"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:109
+msgid "User's Grade"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:110
+msgid "User's score in the activity"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:116
+msgid ""
+"\n"
+"            An explanation from the external grader system\n"
+"            about the user's score\n"
+"            "
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:121
+msgid "Explanation from external grader"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:126
+msgid "Authentication Endpoint"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:127
+msgid "The endpoint that gives us authorized token"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:132
+msgid "Client ID"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:133
+msgid "OAuth2 client id to use for the authentication endpoint"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:138
+msgid "Client Secret"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:139
+msgid "OAuth2 client password to use for the authentication endpoint"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:144
+msgid "API Key"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:146
+msgid ""
+"\n"
+"            API Key to include in the header of the request\n"
+"            as X-API-Key in the grader api\n"
+"            "
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:155
+msgid "Authentication Username"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:156
+msgid "Authentication endpoint Username"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:161
+msgid "Authentication Password"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:162
+msgid "Authentication endpoint Password"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:167
+msgid "Grader Endpoint "
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:168
+msgid "This is an endpoint we call (with parameter) to get user's score"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:174
+msgid "HTTP call method"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:175
+msgid "Method we should use to call grader endpoint"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:177
+msgid "get"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:178
+msgid "post"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:183
+msgid "Activity Identifier "
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:185
+msgid ""
+"\n"
+"            An identifier to send to the grader to\n"
+"            recognize the activity's unit\n"
+"            "
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:195
+msgid "Activity identifier parameter name"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:197
+msgid ""
+"this is a parameter we use in HTTP call to sendactivity_identifier value to "
+"the grader system"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:205
+msgid "Extra Parameters:"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:209
+msgid ""
+"Here you can add extra parameters to include in the request url. you can add "
+"set of parameters and their value like:"
+"example_param_1=example_value_1&example_param_2=example_value_2Make sure it "
+"doesn't start with &If blank, extra parameters are ommitted from the url."
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:255
+msgid ""
+"\n"
+"                    We cannot find your account. Please make sure\n"
+"                    that you have created your account. If you need\n"
+"                    assistance, please contact the course team.\n"
+"                    "
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:284
+#, python-brace-format
+msgid "Assignment {assignment_id}: <b>Passed</b>"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:292
+#, python-brace-format
+msgid "Assignment {id}: <b>Failed</b> - {reason}"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:301
+#, python-brace-format
+msgid "Assignment {assignment_id}: {reason_api_text}"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:397
+msgid "Grader endpoint is not a valid url"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:449
+msgid "Authentication endpoint is not a valid url"
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:478
+msgid ""
+"\n"
+"                Something went wrong, please contact the course team.\n"
+"                "
+msgstr ""
+
+#: gradefetcher/gradefetcher.py:495
+#, python-brace-format
+msgid ""
+"You got <span class='grade'>{grade}% </span>score for this activity.<br /"
+">Explanation: <span class='reason'><ul>{reasons_msg}</ul></span>"
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html:7
+msgid "You got "
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html:7
+msgid " score for this activity."
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html:8
+msgid "Explanation: "
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html:17
+#, python-format
+msgid "Click on the %(button_text)s button to see your score."
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html:19
+msgid ""
+"We cannot find your account on Customization. Please make sure that you have "
+"created your account. If you need assistance, please contact the course team."
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html:21
+msgid "Something went wrong please try again."
+msgstr ""
+
+#: gradefetcher/static/html/gradefetcher.html:26
+msgid "Loading"
+msgstr ""
+
+#: gradefetcher/static/html/studio_edit.html:95
+msgid "None Available"
+msgstr ""
+
+#: gradefetcher/static/html/studio_edit.html:107
+msgid "Clear"
+msgstr ""
+
+#: gradefetcher/static/html/studio_edit.html:108
+msgid "Clear Value"
+msgstr ""
+
+#: gradefetcher/static/html/studio_edit.html:122
+msgid "Save"
+msgstr ""
+
+#: gradefetcher/static/html/studio_edit.html:126
+msgid "Cancel"
+msgstr ""
