@@ -1,0 +1,6 @@
+include LICENSE
+include README.md
+recursive-include locale *
+recursive-include gradefetcher/translations *
+recursive-include gradefetcher/static *
+prune frontend/node_modules
