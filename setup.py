@@ -24,7 +24,7 @@ def package_data(pkg, roots):
 
 setup(
     name='xblock-grade-fetcher',
-    version='0.4.8',
+    version='0.4.9',
     description='Grade Fetcher',
     license='AGPL v3',
     packages=[
@@ -38,5 +38,5 @@ setup(
             'gradefetcher = gradefetcher:GradeFetcherXBlock',
         ]
     },
-    package_data=package_data("gradefetcher", ["static", "public"]),
+    package_data=package_data("gradefetcher", ["static", "public", "translations"]),
 )
