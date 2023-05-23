@@ -3,7 +3,7 @@ xblock-utils==2.1.1
 git+https://github.com/edx/xblock-sdk.git@0.2.2#egg=xblock-sdk  # last version supporting Python 3.5
 web-fragments==0.3.2
 django==2.2.28
-requests==2.25.1
+requests==2.31.0
 
 # some of those we don't pin versions on
 # because we want to still support python 3.5
