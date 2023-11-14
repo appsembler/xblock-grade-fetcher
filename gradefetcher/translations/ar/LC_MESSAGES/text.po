@@ -1,0 +1,186 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR support@appsembler.com, 2023.
+#
+# Translators:
+# Appsembler support@appsembler.com, 2023
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-09 15:43+0300\n"
+"PO-Revision-Date: 2023-11-09 12:43+0000\n"
+"Last-Translator: Appsembler support@appsembler.com, 2023\n"
+"Language-Team: Arabic (https://www.transifex.com/open-edx/teams/6205/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Passed"
+msgstr "ناجح"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Failed"
+msgstr "راسب"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment"
+msgstr "المهمة"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: <b>Passed</b>"
+msgstr "المهمة {assignment_id}: <b>ناجح</b>"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: <b>Failed</b> - {reason_api_text}"
+msgstr "المهمة {assignment_id}: <b>راسب</b> - {reason_api_text}"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: - {reason_api_text} "
+msgstr "المهمة {assignment_id}: - {reason_api_text} "
+
+#: gradefetcher/gradefetcher.py gradefetcher/static/html/gradefetcher.html
+msgid "You got {grade} score for this activity. Explanation: {reasons_msg}"
+msgstr "حصلت على {grade} في هذا النشاط. الشرح: {reasons_msg}"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Assignment {assignment_id}: Failed "
+msgstr "المهمة {assignment_id}: راسب"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team."
+msgstr "لا نستطيع العثور على حسابك في التخصيص. الرجاء التأكد من إنشاء حسابك. إذا كنت بحاجة إلى مساعدة، يرجى الاتصال بفريق الدورة."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Something went wrong please try again."
+msgstr "حدث خطأ ما، الرجاء المحاولة مرة أخرى."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Loading"
+msgstr "جاري التحميل"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "You got "
+msgstr "حصلت على "
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid " score for this activity."
+msgstr " في هذا النشاط."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Explanation: "
+msgstr "الشرح:"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "Click on the %(button_text)s button to see your score."
+msgstr "انقر على زر %(button_text)s لرؤية درجتك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "You got <span class='grade'>{grade}% </span> score for this activity.<br />Explanation: <span class='reason'><ul>{reasons_msg}</ul></span>"
+msgstr "لقد حصلت على <span class='grade'>{grade}% </span> درجة في هذا النشاط.<br />الشرح: <span class='reason'><ul>{reasons_msg}</ul></span>"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid " button to see your score."
+msgstr " زر لرؤية درجتك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that one of your data element groups is not assigned to a data element group set. Note: This does not affect your grade."
+msgstr "يبدو أن أحد مجموعات عناصر البيانات لديك غير مخصص لمجموعة مجموعات عناصر البيانات. ملاحظة: هذا لا يؤثر على درجتك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not created data elements yet. Note: This does not affect your grade, but it is preventing you from completing this set of assignments."
+msgstr "يبدو أنك لم تقم بإنشاء عناصر بيانات بعد. ملاحظة: هذا لا يؤثر على درجتك، لكنه يمنعك من إكمال هذه المجموعة من المهام."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not created all of the three requested data element groups. Note: This does not affect your grade."
+msgstr "يبدو أنك لم تقم بإنشاء كل المجموعات الثلاث المطلوبة لعناصر البيانات. ملاحظة: هذا لا يؤثر على درجتك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not assigned one or more of your data elements to your data element groups. Note: This does not affect your grade."
+msgstr "يبدو أنك لم تخصص واحدًا أو أكثر من عناصر البيانات لديك إلى مجموعات عناصر البيانات الخاصة بك. ملاحظة: هذا لا يؤثر على درجتك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not created the six data elements as requested. Note: This does not affect your grade"
+msgstr "يبدو أنك لم تقم بإنشاء الستة عناصر البيانات كما طلب. ملاحظة: هذا لا يؤثر على درجتك"
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that no data set is currently assigned to your account. Please contact the course team."
+msgstr "يبدو أنه لم يتم تخصيص أي مجموعة بيانات حاليًا لحسابك. يرجى التواصل مع فريق الدورة التدريبية."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that no data has been entered in your data set."
+msgstr "يبدو أنه لم يتم إدخال أي بيانات في مجموعة البيانات الخاصة بك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not created all of the four requested organisation unit groups. Note: This does not affect your grade."
+msgstr "يبدو أنك لم تقم بإنشاء كل الأربع مجموعات وحدات التنظيم المطلوبة. ملاحظة: هذا لا يؤثر على درجتك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not created the requested two organisation unit group sets. Note: This does not affect your grade."
+msgstr "يبدو أنك لم تقم بإنشاء المجموعتين المطلوبتين لمجموعات وحدات التنظيم. ملاحظة: هذا لا يؤثر على درجتك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "ERROR: We cannot find your account on Customization. Please make sure that you have created your account. If you need assistance, please contact the course team."
+msgstr "خطأ: لا يمكننا العثور على حسابك في التخصيص. يرجى التأكد من أنك قد أنشأت حسابك. إذا كنت بحاجة إلى مساعدة، يرجى التواصل مع فريق الدورة التدريبية."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "ERROR: Two or more Root Organisation Units have been assigned to your account. This is preventing us from assessing your assignments. Please contact the course team."
+msgstr "خطأ: تم تخصيص وحدتين تنظيميتين جذريتين أو أكثر لحسابك. هذا يمنعنا من تقييم مهامك. يرجى التواصل مع فريق الدورة التدريبية."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not yet assigned your data elements to your data set, therefore you can't enter data. Check that data elements are assigned to the data set that was created for you."
+msgstr "يبدو أنك لم تخصص عناصر البيانات الخاصة بك لمجموعة البيانات الخاصة بك بعد، وبالتالي لا يمكنك إدخال البيانات. تحقق من أن عناصر البيانات مخصصة لمجموعة البيانات التي تم إنشاؤها لك."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have created none of the requested organisation units."
+msgstr "يبدو أنك لم تقم بإنشاء أي من وحدات التنظيم المطلوبة."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that your data set is not yet assigned to any organisation units."
+msgstr "يبدو أن مجموعة البيانات الخاصة بك لم يتم تخصيصها بعد لأي وحدات تنظيمية."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "User did not create any Facility-level Org Units."
+msgstr "المستخدم لم يقم بإنشاء أي وحدات تنظيمية على مستوى المنشأة."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "We could not find your Malaria program. Please make sure that the program that you want to be graded has the word 'Malaria' in its name."
+msgstr "لم نتمكن من العثور على برنامج الملاريا الخاص بك. يرجى التأكد من أن البرنامج الذي تريد تقييمه يحتوي على كلمة 'ملاريا' في اسمه."
+
+#: gradefetcher/static/html/gradefetcher.html gradefetcher/gradefetcher.py
+msgid "It seems that you have not assigned an organisation unit to your Malaria program."
+msgstr "يبدو أنك لم تخصص وحدة تنظيمية لبرنامج الملاريا الخاص بك."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not assigned one or more of your data elements to your Malaria program."
+msgstr "يبدو أنك لم تقم بتعيين واحد أو أكثر من عناصر البيانات الخاصة بك إلى برنامج الملاريا الخاص بك."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created an option set for your data elements that have been assigned to your Malaria program."
+msgstr "يبدو أنك لم تقم بإنشاء مجموعة خيارات لعناصر البيانات التي تم تعيينها إلى برنامج الملاريا الخاص بك."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created options for your option set."
+msgstr "يبدو أنك لم تقم بإنشاء خيارات لمجموعة الخيارات الخاصة بك."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems like your program's data elements are not added to groups, or they are not of the Tracker type."
+msgstr "يبدو أن عناصر البيانات الخاصة ببرنامجك لم تتم إضافتها إلى مجموعات، أو أنها ليست من نوع Tracker."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems you have not created a section form for your Malaria program."
+msgstr "يبدو أنك لم تقم بإنشاء نموذج قسم لبرنامج الملاريا الخاص بك."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems you have not assigned your user access to your Malaria program. Please check the sharing settings for your program and that you have access to both data and metadata."
+msgstr "يبدو أنك لم تقم بتخصيص وصول المستخدم الخاص بك إلى برنامج الملاريا. الرجاء التحقق من إعدادات المشاركة لبرنامجك وأن لديك الوصول إلى كل من البيانات والميتاداتا."
+
+#: gradefetcher/static/html/gradefetcher.html
+msgid "It seems that you have not created an event or have not entered any data into it for your Malaria program."
+msgstr "يبدو أنك لم تقم بإنشاء حدث أو لم تدخل أي بيانات فيه لبرنامج الملاريا الخاص بك."
